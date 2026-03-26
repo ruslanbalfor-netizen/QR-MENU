@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="az">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Giriş | RUIS Admin</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="supabase-config.js"></script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #0f172a;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            color: white;
+        }
+        .login-card {
+            background: rgba(30, 41, 59, 0.85);
+            backdrop-filter: blur(15px);
+            padding: 40px 30px;
+            border-radius: 24px;
+            width: 90%;
+            max-width: 380px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            text-align: center;
+        }
+        .logo-container {
+            margin-bottom: 30px;
+        }
+        .brand-logo {
+            width: 80px;
+            height: 80px;
+            border-radius: 15px;
+            margin-bottom: 15px;
+        }
+        h2 { margin: 0 0 10px; font-weight: 700; color: #fff; }
+        p { color: #94a3b8; font-size: 0.9rem; margin-bottom: 30px; }
+        .form-group { text-align: left; margin-bottom: 20px; }
+        label { display: block; font-size: 0.85rem; font-weight: 500; margin-bottom: 8px; color: #cbd5e1; }
+        .form-control {
+            width: 100%;
+            padding: 12px 15px;
+            background: rgba(15, 23, 42, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            color: white;
+            font-size: 1rem;
+            box-sizing: border-box;
+            outline: none;
+            transition: 0.3s;
+        }
+        .form-control:focus { border-color: #3b82f6; box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2); }
+        .btn {
+            width: 100%;
+            padding: 12px;
+            background: linear-gradient(135deg, #3b82f6, #2563eb);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.3s;
+            margin-top: 10px;
+        }
+        .btn:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(37, 99, 235, 0.4); }
+        .error-msg { color: #ef4444; font-size: 0.85rem; margin-top: 15px; display: none; }
+    </style>
+</head>
+<body>
+
+    <div class="login-card">
+        <div class="logo-container">
+            <img src="assets/ruis-logo.png?v=1.1" alt="RUIS Logo" class="brand-logo">
+            <h2>RUIS Admin</h2>
+            <p>Daxil olmaq üçün məlumatlarınızı daxil edin</p>
+        </div>
+
+        <form id="login-form">
+            <div class="form-group">
+                <label>E-poçt</label>
+                <input type="email" id="email" class="form-control" placeholder="nümunə@mail.com" required>
+            </div>
+            <div class="form-group">
+                <label>Şifrə</label>
+                <input type="password" id="password" class="form-control" placeholder="••••••••" required>
+            </div>
+            <button type="submit" class="btn" id="login-btn">Giriş Et</button>
+            <div id="error-msg" class="error-msg"></div>
+        </form>
+    </div>
+
+    <script>
+        document.getElementById('login-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const btn = document.getElementById('login-btn');
+            const errorElement = document.getElementById('error-msg');
+
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Yüklənir...';
+            errorElement.style.display = 'none';
+
+            try {
+                const { data, error } = await window.supabaseClient.auth.signInWithPassword({
+                    email,
+                    password
+                });
+
+                if (error) throw error;
+
+                // Success! Redirect to admin
+                window.location.href = 'admin.html';
+            } catch (err) {
+                errorElement.textContent = "Giriş xətası: " + err.message;
+                errorElement.style.display = 'block';
+                btn.disabled = false;
+                btn.innerHTML = 'Giriş Et';
+            }
+        });
+
+        // Check if already logged in
+        async function checkSession() {
+            const { data: { session } } = await window.supabaseClient.auth.getSession();
+            if (session) {
+                window.location.href = 'admin.html';
+            }
+        }
+        checkSession();
+    </script>
+</body>
+</html>
