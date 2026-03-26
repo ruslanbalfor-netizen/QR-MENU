@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="az">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RUIS QR Menu | Sürətli və Müasir Rəqəmsal Menyu</title>
+    <meta name="description" content="RUIS QR Menu ilə restoran və kafeləriniz üçün müasir, sürətli və şık rəqəmsal menyular yaradın. Müştəriləriniz üçün hər şey bir toxunuşda!">
+    
+    <!-- Open Graph / Social Media -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://ruisqr.com/">
+    <meta property="og:title" content="RUIS QR Menu | Rəqəmsal Menyu Həlli">
+    <meta property="og:description" content="Restoranınızın menyusunu rəqəmsallaşdırın. Sürətli, mobil uyğun və şık dizayn.">
+    <meta property="og:image" content="https://ruisqr.com/assets/ruis-logo.png">
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://ruisqr.com/">
+    <meta property="twitter:title" content="RUIS QR Menu">
+    <meta property="twitter:description" content="Restoranınızın menyusunu rəqəmsallaşdırın. Sürətli, mobil uyğun və şık dizayn.">
+    <meta property="twitter:image" content="https://ruisqr.com/assets/ruis-logo.png">
+
+    <link rel="stylesheet" href="style.css?v=13.0">
+    <!-- Google Fonts for modern typography -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Font Awesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+
+<body>
+    <!-- Full Page Loading Overlay -->
+    <div id="page-loader" class="page-loader">
+        <div class="loader-content">
+            <div class="spinner"></div>
+            <p>Menyu Yüklənir...</p>
+        </div>
+    </div>
+
+    <!-- Header / Branding -->
+    <header class="header">
+        <div class="header-cover" id="header-cover"
+            style="background-image: url('https://placehold.co/800x300/333/666?text=Cover');">
+            
+            <!-- Background Theme Picker -->
+            <div class="theme-switch" id="theme-switch">
+                <button class="theme-btn-current" id="theme-btn-current" title="Rəng Seçimi">
+                    <i class="fa-solid fa-palette"></i>
+                </button>
+                <div class="theme-dropdown" id="theme-dropdown">
+                    <button class="theme-option active" data-theme="default" title="Standart Açığ">
+                        <span class="theme-color-dot" style="background-color: #f8fafc;"></span>
+                    </button>
+                    <button class="theme-option" data-theme="yoghurt" title="Yoghurt">
+                        <span class="theme-color-dot" style="background-color: #F5E9CE;"></span>
+                    </button>
+                    <button class="theme-option" data-theme="vivid-orange" title="Vivid Orange">
+                        <span class="theme-color-dot" style="background-color: #FFA102;"></span>
+                    </button>
+                    <button class="theme-option" data-theme="oceanic-noir" title="Oceanic Noir">
+                        <span class="theme-color-dot" style="background-color: #172B36;"></span>
+                    </button>
+                    <button class="theme-option" data-theme="rum-chocolate" title="Rum Chocolate">
+                        <span class="theme-color-dot" style="background-color: #450E16;"></span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Dark Mode Toggle Button (Relocated to bottom-left of cover) -->
+            <button class="dark-mode-toggle" id="dark-mode-toggle" title="Gündüz/Gecə rejimi">
+                <div class="toggle-track">
+                    <i class="fa-solid fa-sun toggle-sun"></i>
+                    <i class="fa-solid fa-moon toggle-moon"></i>
+                    <div class="toggle-thumb"></div>
+                </div>
+            </button>
+            
+            <!-- Language Switcher relocated here directly inside cover -->
+            <div class="lang-switch" id="lang-switch">
+                <button class="lang-btn-current" id="lang-btn-current">
+                    <img src="assets/icons/az.png?v=3.0" id="current-lang-flag" alt="" aria-hidden="true" style="width:20px; height:15px; border-radius:3px; object-fit:cover;">
+                    <span id="current-lang-text">AZ</span>
+                </button>
+                <div class="lang-dropdown" id="lang-dropdown">
+                    <button class="lang-option active" data-lang="az" data-flag="assets/icons/az.png?v=3.0"><img src="assets/icons/az.png?v=3.0" alt=""> AZ</button>
+                    <button class="lang-option" data-lang="en" data-flag="assets/icons/en.png?v=3.0"><img src="assets/icons/en.png?v=3.0" alt=""> EN</button>
+                    <button class="lang-option" data-lang="ru" data-flag="assets/icons/ru.png?v=3.0"><img src="assets/icons/ru.png?v=3.0" alt=""> RU</button>
+                </div>
+            </div>
+        </div>
+        <div class="header-container">
+            <div class="brand-wrapper">
+                <img src="assets/ruis-logo.png?v=1.1" alt="RUIS Logo" class="brand-logo"
+                    id="brand-logo">
+                <h1 class="brand-name">Bizim Restoran</h1>
+            </div>
+            
+            <!-- Scripts will inject social/call icons here -->
+            <div id="social-branding-container"></div>
+        </div>
+    </header>
+
+    <!-- Category Navigation (Moved outside header to allow sticky positioning) -->
+    <div class="sticky-nav-wrapper">
+        <!-- Search Bar -->
+        <div class="search-container">
+            <div class="search-input-wrapper">
+                <i class="fa-solid fa-magnifying-glass search-icon"></i>
+                <input type="text" id="menu-search-input" placeholder="Yemək, içki və ya kateqoriya axtar..." autocomplete="off">
+                <button id="clear-search-btn" class="clear-search-btn" style="display: none;"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+        </div>
+
+        <nav class="category-nav">
+            <ul class="category-list" id="category-list">
+                <!-- Categories will be injected here by JS -->
+            </ul>
+        </nav>
+    </div>
+
+    <!-- Main Content Area -->
+    <main class="menu-container" id="menu-container">
+        <!-- Rendered menu items will go here -->
+    </main>
+
+    <!-- Floating Cart Button (Optional, can be toggled) -->
+    <div class="floating-cart" id="floating-cart" style="display: none;">
+        <div class="cart-info">
+            <i class="fa-solid fa-basket-shopping"></i>
+            <span class="cart-count">0</span>
+            <span>Məhsul</span>
+        </div>
+        <div class="cart-total">0.00 AZN</div>
+    </div>
+
+    <!-- Cart Modal -->
+    <div class="cart-modal-overlay" id="cart-modal">
+        <div class="cart-modal-content">
+            <div class="cart-header">
+                <h2>Səbətiniz</h2>
+                <button class="close-btn" id="close-cart-btn"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div class="cart-items" id="cart-items-list">
+                <!-- Cart items will be injected here -->
+            </div>
+            <div class="cart-footer">
+                <div class="total-row">
+                    <span>Cəmi:</span>
+                    <span id="cart-total-price">0.00 AZN</span>
+                </div>
+                <!-- WhatsApp Nömrəsi Inputu -->
+                <div class="customer-phone-input">
+                    <label for="customer-wa-number">Sizin WhatsApp nömrəniz (Nümunə: 994501234567):</label>
+                    <input type="tel" id="customer-wa-number" placeholder="994..." required>
+                </div>
+                <button class="checkout-btn" id="checkout-btn">
+                    <i class="fa-brands fa-whatsapp"></i> Sifariş Çekini Göndər
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Item Details Modal -->
+    <div class="item-modal-overlay" id="item-detail-modal">
+        <div class="item-modal-content">
+            <button class="close-item-btn" id="close-item-btn"><i class="fa-solid fa-xmark"></i></button>
+            <img src="" id="modal-item-img" class="modal-item-img" alt="Item Image">
+            <div class="item-modal-body">
+                <div class="modal-item-header">
+                    <h2 id="modal-item-title">Item Name</h2>
+                    <span id="modal-item-price" class="modal-item-price">0.00 AZN</span>
+                </div>
+                <div id="modal-item-meta" class="item-meta" style="margin-bottom: 10px;"></div>
+                <div id="modal-item-badges" style="margin-bottom: 10px;"></div>
+                <p id="modal-item-desc" class="modal-item-desc">Description goes here...</p>
+
+                <button class="checkout-btn add-from-modal-btn" id="modal-add-btn">
+                    <i class="fa-solid fa-plus"></i> Səbətə at
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Supabase CDN and Local Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="supabase-config.js"></script>
+    <script src="script.js?v=11.0"></script>
+</body>
+
+</html>
