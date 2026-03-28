@@ -487,7 +487,7 @@ body.dark-mode .theme-btn-current:hover {
     align-items: center;
     gap: 0;
     z-index: 1500;
-    height: 160px;
+    height: 120px;
     overflow-y: auto;
     scroll-snap-type: y mandatory;
     scroll-behavior: smooth;
@@ -501,7 +501,7 @@ body.dark-mode .theme-btn-current:hover {
 }
 
 .drum-padding {
-    flex: 0 0 65px;
+    flex: 0 0 36px;
     width: 100%;
 }
 
@@ -521,7 +521,7 @@ body.dark-mode .theme-btn-current:hover {
 /* Because the dropdown has overflow, absolute is relative to scrolled content. We need sticky! */
 .drum-selector-overlay {
     position: sticky;
-    top: 62px; /* Approx middle of 160px */
+    top: 42px; /* Approx middle of 120px */
     left: 0;
     transform: none;
     margin-bottom: -36px; /* offset height so it doesn't take space */
@@ -539,6 +539,9 @@ body.dark-mode .drum-selector-overlay {
 }
 
 .theme-option {
+    -webkit-appearance: none;
+    appearance: none;
+    background-image: none !important;
     padding: 0;
     width: 36px;
     height: 36px;
