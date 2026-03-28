@@ -31,16 +31,50 @@
 </head>
 
 <body>
-    <!-- Full Page Loading Overlay -->
-    <div id="page-loader" class="page-loader">
-        <div class="loader-content">
-            <div class="spinner"></div>
-            <p>Menyu Yüklənir...</p>
+    <!-- Landing Page (Shown when no place is selected) -->
+    <section id="landing-page" class="landing-page" style="display: none;">
+        <div class="landing-hero">
+            <div class="landing-logo-box">
+                <img src="assets/ruis-logo.png?v=1.1" alt="RUIS Logo" class="landing-logo">
+            </div>
+            <h1 class="landing-title">RUIS QR Menu</h1>
+            <p class="landing-subtitle">Restoranınız üçün Müasir və Sürətli Rəqəmsal Menyu Həlli</p>
+            
+            <div class="landing-cta-box">
+                <a href="?place=demo" class="landing-cta-btn demo-btn">
+                    <i class="fa-solid fa-eye"></i> Demo Menyuya Bax
+                </a>
+                <a href="https://wa.me/994000000000" class="landing-cta-btn contact-btn">
+                    <i class="fa-brands fa-whatsapp"></i> Öz Menyunu Yarat
+                </a>
+            </div>
         </div>
-    </div>
+
+        <div class="landing-features">
+            <div class="feature-card">
+                <i class="fa-solid fa-bolt feature-icon"></i>
+                <h3>Sürətli</h3>
+                <p>Məhsullar və şəkillər anında yüklənir.</p>
+            </div>
+            <div class="feature-card">
+                <i class="fa-solid fa-palette feature-icon"></i>
+                <h3>Dinamik</h3>
+                <p>Rəng barabanı ilə dizaynı siz seçin.</p>
+            </div>
+            <div class="feature-card">
+                <i class="fa-brands fa-whatsapp feature-icon"></i>
+                <h3>Sifariş</h3>
+                <p>WhatsApp vasitəsilə birbaşa sifariş qəbul edin.</p>
+            </div>
+        </div>
+        
+        <footer class="landing-footer">
+            <p>&copy; 2026 RUIS. Bütün hüquqlar qorunur.</p>
+        </footer>
+    </section>
 
     <!-- Header / Branding -->
-    <header class="header">
+    <header class="header" id="menu-header">
         <div class="header-cover" id="header-cover"
             style="background-image: url('https://placehold.co/800x300/333/666?text=Cover');">
             
@@ -103,7 +137,7 @@
     </header>
 
     <!-- Category Navigation (Moved outside header to allow sticky positioning) -->
-    <div class="sticky-nav-wrapper">
+    <div class="sticky-nav-wrapper" id="menu-nav">
         <!-- Search Bar -->
         <div class="search-container">
             <div class="search-input-wrapper">

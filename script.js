@@ -193,82 +193,79 @@ document.addEventListener('DOMContentLoaded', () => {
             let placeSlug = urlParams.get('place');
 
             if (!placeSlug) {
-                const brandName = document.querySelector('.brand-name');
-                if (brandName) brandName.textContent = "Məkan Tapılmadı";
-                if (menuContainer) {
-                    menuContainer.innerHTML = "<h3 style='text-align:center; padding:50px;'>Xəta: Məkan Təyin Olunmayıb. Zəhmət olmasa düzgün QR kodu oxudun və ya admin panelində məkana daxil olun.</h3>";
+                // Show Landing Page, Hide Menu elements
+                const landingPage = document.getElementById('landing-page');
+                const menuHeader = document.getElementById('menu-header');
+                const menuNav = document.getElementById('menu-nav');
+                const menuContainer = document.getElementById('menu-container');
+                const pageLoader = document.getElementById('page-loader');
+
+                if (landingPage) landingPage.style.display = 'flex';
+                if (menuHeader) menuHeader.style.display = 'none';
+                if (menuNav) menuNav.style.display = 'none';
+                if (menuContainer) menuContainer.style.display = 'none';
+                
+                // Hide the loader so the landing says hello
+                if (pageLoader) {
+                    pageLoader.classList.add('fade-out');
                 }
                 return;
             }
 
             placeSlug = placeSlug.trim().toLowerCase();
+            let placeData, catsData, itemsData;
 
-            // 1. Fetch Place Details
-            const { data: placeData, error: placeError } = await supabaseClientLocal
+            // --- DATA FETCH FROM SUPABASE ---
+            const { data: pData, error: pError } = await supabaseClientLocal
                 .from('places')
                 .select('*')
                 .eq('slug', placeSlug)
                 .single();
 
-            if (placeError) {
-
+            if (pError || !pData) {
                 throw new Error(`Məkan ('${placeSlug}') tapılmadı bazada.`);
             }
-            if (!placeData) throw new Error("Məkan məlumatı boşdur.");
+            placeData = pData;
 
+            const { data: cData, error: cError } = await supabaseClientLocal
+                .from('categories')
+                .select('*')
+                .eq('place_id', placeData.id);
+
+            if (cError) throw cError;
+            catsData = cData || [];
+
+            const catIds = catsData.map(c => c.id);
+            if (catIds.length > 0) {
+                const { data: iData, error: itemsError } = await supabaseClientLocal
+                    .from('items')
+                    .select('*')
+                    .in('category_id', catIds);
+
+                if (itemsError) throw itemsError;
+                itemsData = iData || [];
+            } else {
+                itemsData = [];
+            }
+
+            // --- UI Updates ---
             const brandNameEl = document.querySelector('.brand-name');
             if (brandNameEl) brandNameEl.textContent = placeData.name;
             document.title = placeData.name + " | QR Menyu";
-            
-            // Set Logo and Cover if available
             const logoEl = document.getElementById('brand-logo');
             const coverEl = document.getElementById('header-cover');
-            
-            if (logoEl) {
-                logoEl.src = placeData.logo || "https://placehold.co/150x150/ffffff/cccccc?text=Logo";
-            }
-            
-            if (coverEl) {
-                if (placeData.cover) {
-                    coverEl.style.backgroundImage = `url('${placeData.cover}')`;
-                } else {
-                    coverEl.style.backgroundImage = "url('https://placehold.co/800x300/333/666?text=Cover')";
-                }
-            }
-            
+            if (logoEl) logoEl.src = placeData.logo || "https://placehold.co/150x150/ffffff/cccccc?text=Logo";
+            if (coverEl) coverEl.style.backgroundImage = `url('${placeData.cover || 'https://placehold.co/800x300/333/666?text=Cover'}')`;
             appData.branding.currency = placeData.currency || 'AZN';
             appData.branding.service_charge = placeData.service_charge || 0;
 
-            // Render Social Links
+            // Socials
             let socialHtml = '';
-            if (placeData.phone) {
-                socialHtml += `<a href="tel:${placeData.phone}" class="social-circle-btn" title="Zəng et">
-                    <i class="fa-solid fa-phone" style="font-size:1.3rem;color:#555;"></i>
-                </a>`;
-            }
-            if (placeData.whatsapp) {
-                let waNum = placeData.whatsapp.replace(/[^0-9]/g, '');
-                socialHtml += `<a href="https://wa.me/${waNum}" class="social-circle-btn" target="_blank" title="WhatsApp">
-                    <img src="assets/icons/whatsapp.png" alt="WhatsApp" class="social-icon-img">
-                </a>`;
-            }
-            if (placeData.instagram) {
-                let igUser = placeData.instagram.replace('@', '').trim();
-                socialHtml += `<a href="https://instagram.com/${igUser}" class="social-circle-btn" target="_blank" title="Instagram">
-                    <img src="assets/icons/instagram.png" alt="Instagram" class="social-icon-img">
-                </a>`;
-            }
-            if (placeData.facebook) {
-                socialHtml += `<a href="${placeData.facebook}" class="social-circle-btn" target="_blank" title="Facebook">
-                    <img src="assets/icons/facebook.png" alt="Facebook" class="social-icon-img">
-                </a>`;
-            }
-            if (placeData.google_url) {
-                socialHtml += `<a href="${placeData.google_url}" class="social-circle-btn" target="_blank" title="Google Maps/Review">
-                    <img src="assets/icons/google.png" alt="Google" class="social-icon-img">
-                </a>`;
-            }
-
+            if (placeData.phone) socialHtml += `<a href="tel:${placeData.phone}" class="social-circle-btn"><i class="fa-solid fa-phone"></i></a>`;
+            if (placeData.whatsapp) socialHtml += `<a href="https://wa.me/${placeData.whatsapp.replace(/[^0-9]/g, '')}" class="social-circle-btn" target="_blank"><img src="assets/icons/whatsapp.png" alt="WhatsApp" class="social-icon-img"></a>`;
+            if (placeData.instagram) socialHtml += `<a href="https://instagram.com/${placeData.instagram.replace('@', '').trim()}" class="social-circle-btn" target="_blank"><img src="assets/icons/instagram.png" alt="Instagram" class="social-icon-img"></a>`;
+            if (placeData.facebook) socialHtml += `<a href="${placeData.facebook}" class="social-circle-btn" target="_blank"><img src="assets/icons/facebook.png" alt="Facebook" class="social-icon-img"></a>`;
+            
             let socialWrapper = document.getElementById('place-social-links');
             if (!socialWrapper) {
                 socialWrapper = document.createElement('div');
@@ -279,7 +276,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
             if (socialWrapper) socialWrapper.innerHTML = socialHtml;
 
-            // Render Service Charge Badge (Centered Below Social Icons)
+            // Service Charge Badge
             if (appData.branding.service_charge > 0) {
                 let badge = document.getElementById('service-badge');
                 if (!badge) {
@@ -292,28 +289,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 badge.innerHTML = `<i class="fa-solid fa-receipt"></i> Xidmət Haqqı: ${appData.branding.service_charge}%`;
             }
 
-            // 2. Fetch categories for this place
-            const { data: catsData, error: catsError } = await supabaseClientLocal
-                .from('categories')
-                .select('*')
-                .eq('place_id', placeData.id);
-
-            if (catsError) throw catsError;
-
-            // 3. Fetch items for these categories
-            const catIds = catsData ? catsData.map(c => c.id) : [];
-            let itemsData = [];
-
-            if (catIds.length > 0) {
-                const { data: iData, error: itemsError } = await supabaseClientLocal
-                    .from('items')
-                    .select('*')
-                    .in('category_id', catIds);
-
-                if (itemsError) throw itemsError;
-                itemsData = iData || [];
-            }
-
             appData.categories = (catsData || []).map(c => ({
                 id: c.id,
                 name: { az: c.name_az, en: c.name_en, ru: c.name_ru },
@@ -321,7 +296,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 sortOrder: parseInt(c.sort_order) || 0
             })).sort((a, b) => a.sortOrder - b.sortOrder);
 
-            appData.items = itemsData.map(i => ({
+            appData.items = (itemsData || []).map(i => ({
                 id: i.id,
                 categoryId: i.category_id,
                 name: { az: i.name_az, en: i.name_en, ru: i.name_ru },
