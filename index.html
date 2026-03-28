@@ -22,6 +22,7 @@
     <meta property="twitter:image" content="https://ruisqr.com/assets/ruis-logo.png">
 
     <link rel="stylesheet" href="style.css?v=13.0">
+    <link rel="stylesheet" href="landing.css?v=1.0">
     <!-- Google Fonts for modern typography -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -31,45 +32,126 @@
 </head>
 
 <body>
-    <!-- Landing Page (Shown when no place is selected) -->
+    <!-- Landing Page (Modern Premium Layout) -->
     <section id="landing-page" class="landing-page" style="display: none;">
-        <div class="landing-hero">
-            <div class="landing-logo-box">
-                <img src="assets/ruis-logo.png?v=1.1" alt="RUIS Logo" class="landing-logo">
+        <!-- Nav -->
+        <nav class="landing-nav">
+            <div class="nav-container">
+                <div class="nav-logo">
+                    <img src="assets/ruis-logo.png?v=1.1" alt="RUIS Logo">
+                    <span>RUIS QR</span>
+                </div>
+                <div class="nav-links">
+                    <a href="#features">Üstünlüklər</a>
+                    <a href="#how-it-works">Necə İşləyir?</a>
+                    <a href="https://wa.me/994000000000" class="nav-cta">Başla</a>
+                </div>
             </div>
-            <h1 class="landing-title">RUIS QR Menu</h1>
-            <p class="landing-subtitle">Restoranınız üçün Müasir və Sürətli Rəqəmsal Menyu Həlli</p>
+        </nav>
+
+        <!-- Hero -->
+        <div class="landing-hero-wrapper">
+            <div class="hero-blobs">
+                <div class="blob blob-1"></div>
+                <div class="blob blob-2"></div>
+                <div class="blob blob-3"></div>
+            </div>
             
-            <div class="landing-cta-box">
-                <a href="?place=ruismenu" class="landing-cta-btn demo-btn">
-                    <i class="fa-solid fa-eye"></i> Demo Menyuya Bax
-                </a>
-                <a href="https://wa.me/994000000000" class="landing-cta-btn contact-btn">
-                    <i class="fa-brands fa-whatsapp"></i> Öz Menyunu Yarat
-                </a>
+            <div class="hero-content">
+                <span class="hero-badge">Sürətli • Dinamik • Peşəkar</span>
+                <h1 class="landing-title">Restoranınız üçün <br><span class="gradient-text">Gələcəyin Menyusu</span></h1>
+                <p class="landing-subtitle">Müştərilərinizə tətbiq yükləmədən, anında və şık bir menyu təcrübəsi bəxş edin. Rəqəmsallaşın, fərqlənin.</p>
+                
+                <div class="landing-cta-box">
+                    <a href="?place=ruismenu" class="landing-cta-btn demo-btn">
+                        <i class="fa-solid fa-eye"></i> Demo Menyuya Bax
+                    </a>
+                    <a href="https://wa.me/994000000000" class="landing-cta-btn contact-btn">
+                        <i class="fa-brands fa-whatsapp"></i> Öz Menyunu Yarat
+                    </a>
+                </div>
+            </div>
+
+            <div class="hero-showcase">
+                <div class="phone-mockup">
+                    <div class="phone-screen">
+                        <img src="assets/ruis-logo.png" alt="Demo Screen" class="mockup-img">
+                        <div class="mockup-placeholder">
+                            <div class="p-line p-title"></div>
+                            <div class="p-line p-small"></div>
+                            <div class="p-grid">
+                                <div class="p-item"></div>
+                                <div class="p-item"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
 
-        <div class="landing-features">
-            <div class="feature-card">
-                <i class="fa-solid fa-bolt feature-icon"></i>
-                <h3>Sürətli</h3>
-                <p>Məhsullar və şəkillər anında yüklənir.</p>
+        <!-- Features -->
+        <div id="features" class="landing-section">
+            <h2 class="section-heading">Niyə RUIS QR Menu?</h2>
+            <div class="landing-features">
+                <div class="feature-card">
+                    <div class="card-icon-box"><i class="fa-solid fa-bolt"></i></div>
+                    <h3>Ultra Sürət</h3>
+                    <p>Məhsullar və şəkillər heç bir gecikmə olmadan, anında yüklənir.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="card-icon-box"><i class="fa-solid fa-palette"></i></div>
+                    <h3>Dinamik Rənglər</h3>
+                    <p>Dizaynı özünüz seçin. Rəng barabanı ilə brendinizə uyğun mövzunu tapın.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="card-icon-box"><i class="fa-brands fa-whatsapp"></i></div>
+                    <h3>Sürətli Sifariş</h3>
+                    <p>Müştəriləriniz WhatsApp vasitəsilə birbaşa sifariş verə bilər.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="card-icon-box"><i class="fa-solid fa-qrcode"></i></div>
+                    <h3>Limitsiz Scan</h3>
+                    <p>Sizə lazım olan qədər QR kod yaradın, limitsiz istifadə edin.</p>
+                </div>
             </div>
-            <div class="feature-card">
-                <i class="fa-solid fa-palette feature-icon"></i>
-                <h3>Dinamik</h3>
-                <p>Rəng barabanı ilə dizaynı siz seçin.</p>
-            </div>
-            <div class="feature-card">
-                <i class="fa-brands fa-whatsapp feature-icon"></i>
-                <h3>Sifariş</h3>
-                <p>WhatsApp vasitəsilə birbaşa sifariş qəbul edin.</p>
+        </div>
+
+        <!-- How it works -->
+        <div id="how-it-works" class="landing-section bg-alt">
+            <h2 class="section-heading">3 Sadə Addımda</h2>
+            <div class="steps-grid">
+                <div class="step-item">
+                    <div class="step-num">01</div>
+                    <div class="step-text">
+                        <h4>Müraciət Edin</h4>
+                        <p>WhatsApp vasitəsilə bizə yazın və məkanınızı qeydiyyatdan keçirin.</p>
+                    </div>
+                </div>
+                <div class="step-item">
+                    <div class="step-num">02</div>
+                    <div class="step-text">
+                        <h4>Menyunu Yükləyin</h4>
+                        <p>Məhsullarınızı və şəkilləri admin panelimiz vasitəsilə asanlıqla daxil edin.</p>
+                    </div>
+                </div>
+                <div class="step-item">
+                    <div class="step-num">03</div>
+                    <div class="step-text">
+                        <h4>QR kodları çap edin</h4>
+                        <p>Yaradılmış QR kodları masalara yerləşdirin və müştəriləri salamlayın.</p>
+                    </div>
+                </div>
             </div>
         </div>
         
         <footer class="landing-footer">
-            <p>&copy; 2026 RUIS. Bütün hüquqlar qorunur.</p>
+            <div class="footer-bottom">
+                <p>&copy; 2026 RUIS QR Menu. Bütün hüquqlar qorunur.</p>
+                <div class="footer-links">
+                    <a href="#">Şərtlərimiz</a>
+                    <a href="#">Əlaqə</a>
+                </div>
+            </div>
         </footer>
     </section>
 

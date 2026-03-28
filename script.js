@@ -265,6 +265,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (placeData.whatsapp) socialHtml += `<a href="https://wa.me/${placeData.whatsapp.replace(/[^0-9]/g, '')}" class="social-circle-btn" target="_blank"><img src="assets/icons/whatsapp.png" alt="WhatsApp" class="social-icon-img"></a>`;
             if (placeData.instagram) socialHtml += `<a href="https://instagram.com/${placeData.instagram.replace('@', '').trim()}" class="social-circle-btn" target="_blank"><img src="assets/icons/instagram.png" alt="Instagram" class="social-icon-img"></a>`;
             if (placeData.facebook) socialHtml += `<a href="${placeData.facebook}" class="social-circle-btn" target="_blank"><img src="assets/icons/facebook.png" alt="Facebook" class="social-icon-img"></a>`;
+            if (placeData.google_url) socialHtml += `<a href="${placeData.google_url}" class="social-circle-btn" target="_blank"><img src="assets/icons/google.png" alt="Google" class="social-icon-img"></a>`;
             
             let socialWrapper = document.getElementById('place-social-links');
             if (!socialWrapper) {
