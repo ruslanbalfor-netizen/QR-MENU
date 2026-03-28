@@ -342,13 +342,6 @@ body.theme-oceanic-noir:not(.dark-mode) .brand-name {
 }
 
 /* --- New Mint & Green Themes --- */
-body.theme-soft-mint:not(.dark-mode) {
-    background-color: #CFE5D5 !important;
-    --card-bg: #BFD7C6;
-    --nav-bg: #BFD7C6;
-    --nav-bg-glass: rgba(191, 215, 198, 0.85);
-    --bg-light: #BFD7C6;
-}
 
 body.theme-pastel-green:not(.dark-mode) {
     background-color: #B8D6B2 !important;
@@ -358,13 +351,6 @@ body.theme-pastel-green:not(.dark-mode) {
     --bg-light: #A8C6A2;
 }
 
-body.theme-aqua-breeze:not(.dark-mode) {
-    background-color: #A6D2C8 !important;
-    --card-bg: #96C2B8;
-    --nav-bg: #96C2B8;
-    --nav-bg-glass: rgba(150, 194, 184, 0.85);
-    --bg-light: #96C2B8;
-}
 
 body.theme-seafoam:not(.dark-mode) {
     background-color: #8FC6B7 !important;
