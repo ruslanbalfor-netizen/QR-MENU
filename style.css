@@ -436,7 +436,7 @@ body.theme-dark-plum:not(.dark-mode) .brand-name {
     position: absolute;
     top: 15px;
     right: 15px;
-    z-index: 100;
+    z-index: 1500;
 }
 
 .theme-btn-current {
@@ -481,11 +481,56 @@ body.dark-mode .theme-btn-current:hover {
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
     border-radius: 20px;
     min-width: unset;
-    padding: 6px;
+    padding: 0;
     display: none;
     flex-direction: column;
-    gap: 8px;
-    z-index: 200;
+    align-items: center;
+    gap: 0;
+    z-index: 1500;
+    height: 160px;
+    overflow-y: auto;
+    scroll-snap-type: y mandatory;
+    scroll-behavior: smooth;
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
+    position: relative;
+}
+
+.theme-dropdown::-webkit-scrollbar {
+    display: none;
+}
+
+.drum-padding {
+    flex: 0 0 65px;
+    width: 100%;
+}
+
+.drum-selector-overlay {
+    position: fixed; /* Using fixed wrt the relative container isn't always reliable, let's use sticky or absolute */
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 36px;
+    height: 36px;
+    border: 2px solid var(--primary-color);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 100;
+}
+
+/* Because the dropdown has overflow, absolute is relative to scrolled content. We need sticky! */
+.drum-selector-overlay {
+    position: sticky;
+    top: 62px; /* Approx middle of 160px */
+    left: 0;
+    transform: none;
+    margin-bottom: -36px; /* offset height so it doesn't take space */
+    border: 2px solid var(--primary-color);
+    box-shadow: 0 0 0 100px rgba(255, 255, 255, 0.6); /* Highlights center */
+}
+
+body.dark-mode .drum-selector-overlay {
+    box-shadow: 0 0 0 100px rgba(0, 0, 0, 0.5);
 }
 
 .theme-dropdown.show {
@@ -499,12 +544,16 @@ body.dark-mode .theme-btn-current:hover {
     padding: 0;
     width: 30px;
     height: 30px;
+    margin: 6px 0;
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
     cursor: pointer;
     transition: all 0.2s;
+    scroll-snap-align: center;
+    flex-shrink: 0;
+    z-index: 10;
 }
 
 .theme-option:hover {

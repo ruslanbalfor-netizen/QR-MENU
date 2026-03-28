@@ -83,7 +83,24 @@ document.addEventListener('DOMContentLoaded', () => {
     if (themeBtnCurrent) {
         themeBtnCurrent.addEventListener('click', (e) => {
             e.stopPropagation();
+            const wasOpen = themeDropdown.classList.contains('show');
             themeDropdown.classList.toggle('show');
+            
+            // Drum logic: center the active element initially
+            if (!wasOpen) {
+                const activeOpt = document.querySelector('.theme-option.active');
+                if (activeOpt) {
+                    setTimeout(() => {
+                        const dr = themeDropdown.getBoundingClientRect();
+                        const or = activeOpt.getBoundingClientRect();
+                        themeDropdown.scrollBy({
+                            top: or.top - dr.top - (dr.height / 2) + (or.height / 2),
+                            behavior: 'instant'
+                        });
+                    }, 10);
+                }
+            }
+
             // Close language dropdown if open
             const langDropdown = document.getElementById('lang-dropdown');
             if (langDropdown) langDropdown.classList.remove('show');
@@ -96,13 +113,46 @@ document.addEventListener('DOMContentLoaded', () => {
             themeDropdown.classList.remove('show');
         }
     });
+
+    // Drum scroll event to change color live
+    if (themeDropdown) {
+        let isScrolling;
+        themeDropdown.addEventListener('scroll', () => {
+            window.clearTimeout(isScrolling);
+            isScrolling = setTimeout(() => {
+                const dropdownRect = themeDropdown.getBoundingClientRect();
+                const center = dropdownRect.top + dropdownRect.height / 2;
+                let closestOpt = null;
+                let minDiff = Infinity;
+                
+                themeOptions.forEach(opt => {
+                    const rect = opt.getBoundingClientRect();
+                    const optCenter = rect.top + rect.height / 2;
+                    const diff = Math.abs(center - optCenter);
+                    if (diff < minDiff) {
+                        minDiff = diff;
+                        closestOpt = opt;
+                    }
+                });
+                
+                if (closestOpt && !closestOpt.classList.contains('active')) {
+                    applyTheme(closestOpt.dataset.theme);
+                    playTouchSound();
+                }
+            }, 50);
+        }, { passive: true });
+    }
     
+    // Clicking an option smooth scrolls it into the center
     themeOptions.forEach(opt => {
         opt.addEventListener('click', (e) => {
             playTouchSound();
-            const theme = e.currentTarget.dataset.theme;
-            applyTheme(theme);
-            if (themeDropdown) themeDropdown.classList.remove('show');
+            const dr = themeDropdown.getBoundingClientRect();
+            const or = opt.getBoundingClientRect();
+            themeDropdown.scrollBy({
+                top: or.top - dr.top - (dr.height / 2) + (or.height / 2),
+                behavior: 'smooth'
+            });
         });
     });
 
