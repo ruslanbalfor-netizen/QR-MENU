@@ -485,9 +485,8 @@ body.dark-mode .theme-btn-current:hover {
     display: none;
     flex-direction: column;
     align-items: center;
-    gap: 0;
     z-index: 1500;
-    height: 120px;
+    height: 110px;
     overflow-y: auto;
     scroll-snap-type: y mandatory;
     scroll-behavior: smooth;
@@ -501,36 +500,21 @@ body.dark-mode .theme-btn-current:hover {
 }
 
 .drum-padding {
-    flex: 0 0 36px;
+    flex: 0 0 35px;
     width: 100%;
 }
 
 .drum-selector-overlay {
-    position: fixed; /* Using fixed wrt the relative container isn't always reliable, let's use sticky or absolute */
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 36px;
-    height: 36px;
+    position: sticky;
+    top: 40px; /* Center of 110px container (55px) minus half of 30px height (15px) */
+    left: 0;
+    width: 30px;
+    height: 30px;
+    margin-bottom: -30px; /* offset height so it doesn't take space */
     border: 2px solid var(--primary-color);
     border-radius: 50%;
     pointer-events: none;
     z-index: 100;
-}
-
-/* Because the dropdown has overflow, absolute is relative to scrolled content. We need sticky! */
-.drum-selector-overlay {
-    position: sticky;
-    top: 42px; /* Approx middle of 120px */
-    left: 0;
-    transform: none;
-    margin-bottom: -36px; /* offset height so it doesn't take space */
-    border: 2px solid var(--primary-color);
-    box-shadow: 0 0 0 100px rgba(255, 255, 255, 0.6); /* Highlights center */
-}
-
-body.dark-mode .drum-selector-overlay {
-    box-shadow: 0 0 0 100px rgba(0, 0, 0, 0.5);
 }
 
 .theme-dropdown.show {
@@ -543,8 +527,8 @@ body.dark-mode .drum-selector-overlay {
     appearance: none;
     background-image: none !important;
     padding: 0;
-    width: 36px;
-    height: 36px;
+    width: 28px;
+    height: 28px;
     margin: 6px 0;
     border-radius: 50%;
     border: 2px solid rgba(0, 0, 0, 0.1);
