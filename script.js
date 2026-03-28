@@ -12,7 +12,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- Dark Mode Toggle ---
     const darkModeToggle = document.getElementById('dark-mode-toggle');
-    console.log("Dark Mode Toggle init:", !!darkModeToggle);
+
 
     // Restore saved theme
     if (localStorage.getItem('qr_menu_dark') === 'true') {
@@ -40,7 +40,7 @@ document.addEventListener('DOMContentLoaded', () => {
         darkModeToggle.onclick = () => {
             const isDark = document.body.classList.toggle('dark-mode');
             localStorage.setItem('qr_menu_dark', isDark);
-            console.log("Theme switched:", isDark ? 'dark' : 'light');
+
             playTouchSound();
         };
     }
@@ -161,7 +161,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 .single();
 
             if (placeError) {
-                console.error("Place fetch error:", placeError);
+
                 throw new Error(`Məkan ('${placeSlug}') tapılmadı bazada.`);
             }
             if (!placeData) throw new Error("Məkan məlumatı boşdur.");
@@ -285,7 +285,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }));
 
         } catch (e) {
-            console.error("Fetch Data Error:", e);
+
             appData.categories = [];
             appData.items = [];
             hideLoader();

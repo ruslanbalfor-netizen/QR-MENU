@@ -1,5 +1,0 @@
-;!function(){try { var e="undefined"!=typeof globalThis?globalThis:"undefined"!=typeof global?global:"undefined"!=typeof window?window:"undefined"!=typeof self?self:{},n=(new e.Error).stack;n&&((e._debugIds|| (e._debugIds={}))[n]="e76ffa3f-ce97-2c35-ec96-0c9352da7a3c")}catch(e){}}();
-(globalThis.TURBOPACK||(globalThis.TURBOPACK=[])).push(["object"==typeof document?document.currentScript:void 0,8378431,t=>{"use strict";var e=t.i(850302);let n={isOpen:!1};t.s(["useRequestIntegrationModal",0,function(){let{data:t,mutate:a}=(0,e.default)("requestIntegrationModal",null,{fallbackData:n});return{modalState:t??n,openModal:t=>{a({isOpen:!0,...t})},closeModal:()=>{a(n)}}}])},4656073,t=>{"use strict";var e=t.i(8315961),n=t.i(1295503),a=t.i(8378431);t.s(["default",0,function(){let{openModal:t}=(0,a.useRequestIntegrationModal)();return(0,e.jsx)(n.ActionMenuItem,{onClick:()=>t(),children:"Request an Integration"})}])}]);
-
-//# debugId=e76ffa3f-ce97-2c35-ec96-0c9352da7a3c
-//# sourceMappingURL=85494acd486136c1.js.map

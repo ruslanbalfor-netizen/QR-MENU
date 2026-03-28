@@ -7,10 +7,8 @@ window.cachedPlaces = [];
 
 document.addEventListener('DOMContentLoaded', () => {
     supabaseClientLocal = window.supabaseClient;
-    console.log("Admin2 initialized. Client ready:", !!supabaseClientLocal);
 
     if (!supabaseClientLocal) {
-        console.error("Supabase client not found. Ensure supabase-config.js is loaded.");
         showToast("Supabase bağlantısı tapılmadı!", "error");
     }
 
@@ -493,11 +491,10 @@ window.deletePlace = async function (id) {
 // ================= CATEGORIES =================
 async function fetchCategories() {
     if (!activePlaceId) {
-        console.warn("fetchCategories: No activePlaceId set.");
         return [];
     }
     const { data, error } = await supabaseClientLocal.from('categories').select('*').eq('place_id', activePlaceId).order('sort_order', { ascending: true, nullsFirst: false });
-    if (error) { console.error(error); return []; }
+    if (error) { return []; }
     allCategories = data;
 
     // Update Item Filter Dropdown
@@ -602,7 +599,6 @@ document.getElementById('category-form').addEventListener('submit', async (e) =>
         renderItems();
         showToast("Kateqoriya yadda saxlanıldı.");
     } catch (e) {
-        console.error("Kat Save Error:", e);
         showToast("Xəta: " + e.message, "error");
     } finally {
         btn.innerHTML = originalBtnText;
@@ -788,7 +784,6 @@ document.getElementById('item-form').addEventListener('submit', async (e) => {
         await renderItems();
         showToast("Məhsul yadda saxlanıldı.");
     } catch (e) {
-        console.error("Item Save Error:", e);
         showToast("Xəta: " + e.message, "error");
     } finally {
         btn.innerHTML = originalBtnText;
@@ -862,7 +857,6 @@ window.deleteItem = async function (id) {
 // ================= SETTINGS / QR CODE =================
 function generateQrCode() {
     if (!activePlaceId || !activePlaceSlug) {
-        console.warn("generateQrCode: activePlaceId or activePlaceSlug is missing.");
         return;
     }
 
