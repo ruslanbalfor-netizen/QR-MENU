@@ -147,6 +147,9 @@ document.addEventListener('DOMContentLoaded', () => {
     themeOptions.forEach(opt => {
         opt.addEventListener('click', (e) => {
             playTouchSound();
+            const theme = opt.dataset.theme;
+            applyTheme(theme); // Apply immediately on click
+            
             const dr = themeDropdown.getBoundingClientRect();
             const or = opt.getBoundingClientRect();
             themeDropdown.scrollBy({
