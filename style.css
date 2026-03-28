@@ -353,13 +353,7 @@ body.theme-seafoam:not(.dark-mode) {
     --bg-light: #7FB6A7;
 }
 
-body.theme-teal-mist:not(.dark-mode) {
-    background-color: #6EA89E !important;
-    --card-bg: #5E988E;
-    --nav-bg: #5E988E;
-    --nav-bg-glass: rgba(94, 152, 142, 0.85);
-    --bg-light: #5E988E;
-}
+
 
 /* --- CITRUS & FRUIT THEMES (From User Image) --- */
 
@@ -416,20 +410,7 @@ body.theme-lime-green:not(.dark-mode) .brand-name {
     color: #ffffff;
 }
 
-body.theme-dark-plum:not(.dark-mode) {
-    background-color: #61272F !important;
-    --card-bg: #50161E;
-    --nav-bg: #50161E;
-    --nav-bg-glass: rgba(80, 22, 30, 0.85);
-    --bg-light: #50161E;
-    color: #ffffff;
-    --text-primary: #ffffff;
-    --text-secondary: #f0f0f0;
-}
-body.theme-dark-plum:not(.dark-mode) .section-title,
-body.theme-dark-plum:not(.dark-mode) .brand-name {
-    color: #ffffff;
-}
+
 
 /* --- Theme Picker --- */
 .theme-switch {
