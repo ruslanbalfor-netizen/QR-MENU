@@ -361,6 +361,76 @@ body.theme-teal-mist:not(.dark-mode) {
     --bg-light: #5E988E;
 }
 
+/* --- CITRUS & FRUIT THEMES (From User Image) --- */
+
+body.theme-citrus-orange:not(.dark-mode) {
+    background-color: #E27745 !important;
+    --card-bg: #D16834;
+    --nav-bg: #D16834;
+    --nav-bg-glass: rgba(209, 104, 52, 0.85);
+    --bg-light: #D16834;
+    color: #ffffff;
+    --text-primary: #ffffff;
+    --text-secondary: #f0f0f0;
+}
+
+body.theme-lime-green:not(.dark-mode) {
+    background-color: #A9BC4B !important;
+    --card-bg: #98A93A;
+    --nav-bg: #98A93A;
+    --nav-bg-glass: rgba(152, 169, 58, 0.85);
+    --bg-light: #98A93A;
+    color: #ffffff;
+    --text-primary: #ffffff;
+    --text-secondary: #f0f0f0;
+}
+
+body.theme-lemon-yellow:not(.dark-mode) {
+    background-color: #FBC936 !important;
+    --card-bg: #EBB825;
+    --nav-bg: #EBB825;
+    --nav-bg-glass: rgba(235, 184, 37, 0.85);
+    --bg-light: #EBB825;
+}
+
+body.theme-ruby-red:not(.dark-mode) {
+    background-color: #D12A31 !important;
+    --card-bg: #C01920;
+    --nav-bg: #C01920;
+    --nav-bg-glass: rgba(192, 25, 32, 0.85);
+    --bg-light: #C01920;
+    color: #ffffff;
+    --text-primary: #ffffff;
+    --text-secondary: #f0f0f0;
+}
+body.theme-ruby-red:not(.dark-mode) .section-title,
+body.theme-ruby-red:not(.dark-mode) .brand-name {
+    color: #ffffff;
+}
+body.theme-citrus-orange:not(.dark-mode) .section-title,
+body.theme-citrus-orange:not(.dark-mode) .brand-name {
+    color: #ffffff;
+}
+body.theme-lime-green:not(.dark-mode) .section-title,
+body.theme-lime-green:not(.dark-mode) .brand-name {
+    color: #ffffff;
+}
+
+body.theme-dark-plum:not(.dark-mode) {
+    background-color: #61272F !important;
+    --card-bg: #50161E;
+    --nav-bg: #50161E;
+    --nav-bg-glass: rgba(80, 22, 30, 0.85);
+    --bg-light: #50161E;
+    color: #ffffff;
+    --text-primary: #ffffff;
+    --text-secondary: #f0f0f0;
+}
+body.theme-dark-plum:not(.dark-mode) .section-title,
+body.theme-dark-plum:not(.dark-mode) .brand-name {
+    color: #ffffff;
+}
+
 /* --- Theme Picker --- */
 .theme-switch {
     position: absolute;
