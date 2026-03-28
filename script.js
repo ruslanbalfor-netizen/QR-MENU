@@ -261,11 +261,36 @@ document.addEventListener('DOMContentLoaded', () => {
 
             // Socials
             let socialHtml = '';
-            if (placeData.phone) socialHtml += `<a href="tel:${placeData.phone}" class="social-circle-btn"><i class="fa-solid fa-phone"></i></a>`;
-            if (placeData.whatsapp) socialHtml += `<a href="https://wa.me/${placeData.whatsapp.replace(/[^0-9]/g, '')}" class="social-circle-btn" target="_blank"><img src="assets/icons/whatsapp.png" alt="WhatsApp" class="social-icon-img"></a>`;
-            if (placeData.instagram) socialHtml += `<a href="https://instagram.com/${placeData.instagram.replace('@', '').trim()}" class="social-circle-btn" target="_blank"><img src="assets/icons/instagram.png" alt="Instagram" class="social-icon-img"></a>`;
-            if (placeData.facebook) socialHtml += `<a href="${placeData.facebook}" class="social-circle-btn" target="_blank"><img src="assets/icons/facebook.png" alt="Facebook" class="social-icon-img"></a>`;
-            if (placeData.google_url) socialHtml += `<a href="${placeData.google_url}" class="social-circle-btn" target="_blank"><img src="assets/icons/google.png" alt="Google" class="social-icon-img"></a>`;
+            
+            // Phone
+            if (placeData.phone) {
+                socialHtml += `<a href="tel:${placeData.phone}" class="social-circle-btn"><i class="fa-solid fa-phone"></i></a>`;
+            }
+            
+            // WhatsApp
+            if (placeData.whatsapp) {
+                let waClean = placeData.whatsapp.replace(/[^0-9]/g, '');
+                socialHtml += `<a href="https://wa.me/${waClean}" class="social-circle-btn" target="_blank"><img src="assets/icons/whatsapp.png" alt="WhatsApp" class="social-icon-img"></a>`;
+            }
+            
+            // Instagram
+            if (placeData.instagram) {
+                let instaVal = placeData.instagram.replace('@', '').trim();
+                let instaHref = instaVal.startsWith('http') ? instaVal : `https://instagram.com/${instaVal}`;
+                socialHtml += `<a href="${instaHref}" class="social-circle-btn" target="_blank"><img src="assets/icons/instagram.png" alt="Instagram" class="social-icon-img"></a>`;
+            }
+            
+            // Facebook
+            if (placeData.facebook) {
+                let fbVal = placeData.facebook.trim();
+                let fbHref = fbVal.startsWith('http') ? fbVal : `https://facebook.com/${fbVal}`;
+                socialHtml += `<a href="${fbHref}" class="social-circle-btn" target="_blank"><img src="assets/icons/facebook.png" alt="Facebook" class="social-icon-img"></a>`;
+            }
+            
+            // Google Maps / Review
+            if (placeData.google_url) {
+                socialHtml += `<a href="${placeData.google_url}" class="social-circle-btn" target="_blank"><img src="assets/icons/google.png" alt="Google" class="social-icon-img"></a>`;
+            }
             
             let socialWrapper = document.getElementById('place-social-links');
             if (!socialWrapper) {
