@@ -343,13 +343,6 @@ body.theme-oceanic-noir:not(.dark-mode) .brand-name {
 
 /* --- New Mint & Green Themes --- */
 
-body.theme-pastel-green:not(.dark-mode) {
-    background-color: #B8D6B2 !important;
-    --card-bg: #A8C6A2;
-    --nav-bg: #A8C6A2;
-    --nav-bg-glass: rgba(168, 198, 162, 0.85);
-    --bg-light: #A8C6A2;
-}
 
 
 body.theme-seafoam:not(.dark-mode) {
