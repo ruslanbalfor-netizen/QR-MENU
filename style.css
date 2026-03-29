@@ -1,4 +1,4 @@
-/* QR Menu Stylesheet - Clean Rewrite */
+﻿/* QR Menu Stylesheet - Clean Rewrite */
 
 /* --- Reset & Base --- */
 * {
@@ -8,12 +8,12 @@
 }
 
 body {
-    font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-    background-color: #f8fafc;
-    color: #0f172a;
+    font-family: 'Roboto', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background-color: var(--bg-light);
+    color: var(--text-primary);
     max-width: 480px;
     margin: 0 auto;
-    background-color: white;
+    background-color: var(--bg-light);
 }
 
 /* Custom Scrollbar for a premium look */
@@ -36,13 +36,13 @@ body {
 
 /* --- CSS Variables --- */
 :root {
-    --primary-color: #006ba6;
-    --hover-color: #0496ff;
-    --text-primary: #212529;
-    --text-secondary: #6c757d;
-    --bg-light: #f8f9fa;
-    --nav-bg: #ffffff;
-    --card-bg: #ffffff;
+    --primary-color: #D4AF37;
+    --hover-color: #B89528;
+    --text-primary: #E5E5E5;
+    --text-secondary: #9CA3AF;
+    --bg-light: #0B0B0B;
+    --nav-bg: #1F2937;
+    --card-bg: #1F2937;
     --border-color: #e9ecef;
 }
 
@@ -741,7 +741,7 @@ body.dark-mode .theme-option.active {
 }
 
 #menu-search-input:focus {
-    background-color: white;
+    background-color: var(--bg-light);
     border-color: var(--primary-color);
     box-shadow: 0 0 0 3px rgba(4, 150, 255, 0.15);
 }
@@ -1607,7 +1607,7 @@ body.dark-mode .scroll-sentinel::after {
     flex-direction: column;
     align-items: center;
     padding: 60px 20px;
-    font-family: 'Inter', sans-serif;
+    font-family: 'Roboto', sans-serif;
     color: #333;
 }
 
@@ -1749,4 +1749,14 @@ body.dark-mode .feature-icon {
     .landing-subtitle {
         font-size: 1.1rem;
     }
+}
+
+/* Headings Font Override */
+h1, h2, h3, h4, h5, h6, .brand-name, .data-info h4, .cart-header h2, .modal-item-title {
+    font-family: 'Montserrat', sans-serif;
+}
+
+/* Headings Font Override */
+h1, h2, h3, h4, h5, h6, .brand-name, .data-info h4, .cart-header h2, .modal-item-title, .section-heading {
+    font-family: 'Montserrat', sans-serif;
 }

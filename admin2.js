@@ -288,6 +288,11 @@ async function compressImage(file, folder) {
                 canvas.width = width;
                 canvas.height = height;
                 const ctx = canvas.getContext('2d');
+                
+                // Fill with white first to prevent transparent PNGs from turning black in JPEG
+                ctx.fillStyle = "#ffffff";
+                ctx.fillRect(0, 0, width, height);
+                
                 ctx.drawImage(img, 0, 0, width, height);
 
                 canvas.toBlob((blob) => {
