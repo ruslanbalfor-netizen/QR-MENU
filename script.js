@@ -33,7 +33,7 @@ document.addEventListener('DOMContentLoaded', () => {
             gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.05);
             osc.start(ctx.currentTime);
             osc.stop(ctx.currentTime + 0.05);
-        } catch(e) { /* ignore if audio blocked */ }
+        } catch (e) { /* ignore if audio blocked */ }
     }
 
     if (darkModeToggle) {
@@ -50,7 +50,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const themeDropdown = document.getElementById('theme-dropdown');
     const themeOptions = document.querySelectorAll('.theme-option');
     const savedTheme = localStorage.getItem('qr_menu_theme') || 'default';
-    
+
     function applyTheme(themeName) {
         // Remove existing theme classes
         document.body.classList.forEach(className => {
@@ -58,12 +58,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 document.body.classList.remove(className);
             }
         });
-        
+
         // Add new theme class if not default
         if (themeName !== 'default') {
             document.body.classList.add(`theme-${themeName}`);
         }
-        
+
         // Update active state on options
         themeOptions.forEach(opt => {
             if (opt.dataset.theme === themeName) {
@@ -72,20 +72,20 @@ document.addEventListener('DOMContentLoaded', () => {
                 opt.classList.remove('active');
             }
         });
-        
+
         localStorage.setItem('qr_menu_theme', themeName);
     }
-    
+
     // Apply saved theme on load
     applyTheme(savedTheme);
-    
+
     // Toggle dropdown
     if (themeBtnCurrent) {
         themeBtnCurrent.addEventListener('click', (e) => {
             e.stopPropagation();
             const wasOpen = themeDropdown.classList.contains('show');
             themeDropdown.classList.toggle('show');
-            
+
             // Drum logic: center the active element initially
             if (!wasOpen) {
                 const activeOpt = document.querySelector('.theme-option.active');
@@ -124,7 +124,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 const center = dropdownRect.top + dropdownRect.height / 2;
                 let closestOpt = null;
                 let minDiff = Infinity;
-                
+
                 themeOptions.forEach(opt => {
                     const rect = opt.getBoundingClientRect();
                     const optCenter = rect.top + rect.height / 2;
@@ -134,7 +134,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         closestOpt = opt;
                     }
                 });
-                
+
                 if (closestOpt && !closestOpt.classList.contains('active')) {
                     applyTheme(closestOpt.dataset.theme);
                     playTouchSound();
@@ -142,14 +142,14 @@ document.addEventListener('DOMContentLoaded', () => {
             }, 50);
         }, { passive: true });
     }
-    
+
     // Clicking an option smooth scrolls it into the center
     themeOptions.forEach(opt => {
         opt.addEventListener('click', (e) => {
             playTouchSound();
             const theme = opt.dataset.theme;
             applyTheme(theme); // Apply immediately on click
-            
+
             const dr = themeDropdown.getBoundingClientRect();
             const or = opt.getBoundingClientRect();
             themeDropdown.scrollBy({
@@ -160,10 +160,10 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // Flag map for languages (Paths to PNG icons)
-    const langFlags = { 
-        az: 'assets/icons/az.png?v=3.0', 
-        en: 'assets/icons/en.png?v=3.0', 
-        ru: 'assets/icons/ru.png?v=3.0' 
+    const langFlags = {
+        az: 'assets/icons/az.png?v=3.0',
+        en: 'assets/icons/en.png?v=3.0',
+        ru: 'assets/icons/ru.png?v=3.0'
     };
     const translations = {
         kidFriendly: {
@@ -207,7 +207,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (menuHeader) menuHeader.style.display = 'none';
                 if (menuNav) menuNav.style.display = 'none';
                 if (menuContainer) menuContainer.style.display = 'none';
-                
+
                 // Hide the loader so the landing says hello
                 if (pageLoader) {
                     pageLoader.classList.add('fade-out');
@@ -264,37 +264,37 @@ document.addEventListener('DOMContentLoaded', () => {
 
             // Socials
             let socialHtml = '';
-            
+
             // Phone
             if (placeData.phone) {
                 socialHtml += `<a href="tel:${placeData.phone}" class="social-circle-btn"><i class="fa-solid fa-phone"></i></a>`;
             }
-            
+
             // WhatsApp
             if (placeData.whatsapp) {
                 let waClean = placeData.whatsapp.replace(/[^0-9]/g, '');
                 socialHtml += `<a href="https://wa.me/${waClean}" class="social-circle-btn" target="_blank"><img src="assets/icons/whatsapp.png" alt="WhatsApp" class="social-icon-img"></a>`;
             }
-            
+
             // Instagram
             if (placeData.instagram) {
                 let instaVal = placeData.instagram.replace('@', '').trim();
                 let instaHref = instaVal.startsWith('http') ? instaVal : `https://instagram.com/${instaVal}`;
                 socialHtml += `<a href="${instaHref}" class="social-circle-btn" target="_blank"><img src="assets/icons/instagram.png" alt="Instagram" class="social-icon-img"></a>`;
             }
-            
+
             // Facebook
             if (placeData.facebook) {
                 let fbVal = placeData.facebook.trim();
                 let fbHref = fbVal.startsWith('http') ? fbVal : `https://facebook.com/${fbVal}`;
                 socialHtml += `<a href="${fbHref}" class="social-circle-btn" target="_blank"><img src="assets/icons/facebook.png" alt="Facebook" class="social-icon-img"></a>`;
             }
-            
+
             // Google Maps / Review
             if (placeData.google_url) {
                 socialHtml += `<a href="${placeData.google_url}" class="social-circle-btn" target="_blank"><img src="assets/icons/google.png" alt="Google" class="social-icon-img"></a>`;
             }
-            
+
             let socialWrapper = document.getElementById('place-social-links');
             if (!socialWrapper) {
                 socialWrapper = document.createElement('div');
@@ -403,7 +403,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     window.renderMenu = function (forceRenderAll = false) {
         menuContainer.innerHTML = '';
-        
+
         // Section-level lazy observer (kateqoriya bölmələri üçün)
         let sectionObserver;
         if ('IntersectionObserver' in window) {
@@ -442,7 +442,7 @@ document.addEventListener('DOMContentLoaded', () => {
             itemCard.className = 'menu-item';
             itemCard.style.opacity = '0';
             itemCard.style.transform = 'translateY(20px)';
-            
+
             // Axtarış aktiv olduqda gizlətmə
             if (window.currentSearchTerm) {
                 const title = (item.name[currentLang] || item.name.az || '').toLowerCase();
@@ -563,7 +563,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const catId = section.dataset.catId;
             const allItems = appData.items.filter(item => String(item.categoryId) === String(catId));
             const loadedCount = parseInt(section.dataset.loadedCount) || 0;
-            
+
             if (loadedCount >= allItems.length) {
                 // Hamısı yüklənib — sentinel-i sil
                 if (paginationObserver) paginationObserver.unobserve(sentinel);
@@ -575,7 +575,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (!grid) return;
 
             const nextBatch = allItems.slice(loadedCount, loadedCount + ITEMS_PER_PAGE);
-            
+
             nextBatch.forEach(item => {
                 grid.appendChild(createItemCard(item));
             });
@@ -599,7 +599,7 @@ document.addEventListener('DOMContentLoaded', () => {
             section.id = `section-${cat.id}`;
             section.dataset.catId = cat.id;
             section.style.minHeight = '150px'; // yertutucu hündürlük
-            
+
             const title = document.createElement('h2');
             title.className = 'section-title';
             title.textContent = cat.name[currentLang] || cat.name.az;
@@ -608,7 +608,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const grid = document.createElement('div');
             grid.className = 'menu-items-grid';
             section.appendChild(grid);
-            
+
             menuContainer.appendChild(section);
 
             // İlk 2 kateqoriyanı dərhal göstər, qalanları scroll-a saxla
@@ -633,7 +633,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const observer = new IntersectionObserver((entries) => {
             if (window.isClickScrolling) return; // ignore during click scroll
-            
+
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
                     const id = entry.target.id.replace('section-', '');
@@ -727,7 +727,7 @@ document.addEventListener('DOMContentLoaded', () => {
     modalItemAddBtn.addEventListener('click', () => {
         if (currentModalItemId) {
             addToCart(currentModalItemId);
-            
+
             // Fly to cart animation from modal
             const imgEl = document.getElementById('modal-item-img');
             if (imgEl && imgEl.src) {
@@ -750,7 +750,7 @@ document.addEventListener('DOMContentLoaded', () => {
         // Clone the image
         const flyingImg = sourceImg.cloneNode(true);
         const rect = sourceImg.getBoundingClientRect();
-        
+
         // Initial setup for flying image
         flyingImg.style.position = 'fixed';
         flyingImg.style.top = `${rect.top}px`;
@@ -762,7 +762,7 @@ document.addEventListener('DOMContentLoaded', () => {
         flyingImg.style.zIndex = '99999';
         flyingImg.style.pointerEvents = 'none'; // so it doesn't interfere with clicks
         flyingImg.style.transition = 'all 0.6s cubic-bezier(0.25, 1, 0.5, 1)';
-        
+
         document.body.appendChild(flyingImg);
 
         // Get target coordinates (center of floating cart)
@@ -783,7 +783,7 @@ document.addEventListener('DOMContentLoaded', () => {
         // Clean up & trigger cart bounce after animation ends
         setTimeout(() => {
             flyingImg.remove();
-            
+
             // Re-trigger bounce animation
             floatingCart.classList.remove('jump-animation');
             void floatingCart.offsetWidth; // trigger reflow
@@ -842,7 +842,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (appData.branding.service_charge > 0) {
             serviceAmount = totalPrice * (appData.branding.service_charge / 100);
         }
-        
+
         const finalPrice = totalPrice + serviceAmount;
 
         // Update floating cart logic
@@ -1036,10 +1036,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
             playTouchSound(); // Play touch sound on language change
             window.currentLang = selectedLang;
-            
+
             // Save to LocalStorage
             localStorage.setItem('qr_menu_lang', window.currentLang);
-            
+
             // Update UI & Close Dropdown instantly
             updateLangUI(window.currentLang);
             if (langDropdown) langDropdown.classList.remove('show');
@@ -1077,16 +1077,16 @@ document.addEventListener('DOMContentLoaded', () => {
             const spanText = floatingCart.querySelector('.cart-info span:last-child');
             if (spanText) spanText.textContent = translations.cartItemsText[currentLang];
         }
-        
+
         const cartHeader = document.querySelector('.cart-header h2');
         if (cartHeader) cartHeader.textContent = translations.cartTitle[currentLang];
-        
+
         const totalRowTitle = document.querySelector('.total-row span:first-child');
         if (totalRowTitle) totalRowTitle.textContent = translations.totalRow[currentLang];
-        
+
         const waLabel = document.querySelector('label[for="customer-wa-number"]');
         if (waLabel) waLabel.textContent = translations.waLabel[currentLang];
-        
+
         if (checkoutBtn) checkoutBtn.innerHTML = translations.checkoutBtn[currentLang];
     }
 
@@ -1109,7 +1109,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function handleSearch() {
         if (!searchInput) return;
-        
+
         const term = searchInput.value.toLowerCase().trim();
         window.currentSearchTerm = term;
         let anyMatchFound = false;
@@ -1135,7 +1135,7 @@ document.addEventListener('DOMContentLoaded', () => {
             items.forEach(item => {
                 const title = item.querySelector('.item-title').textContent.toLowerCase();
                 const desc = item.querySelector('.item-description') ? item.querySelector('.item-description').textContent.toLowerCase() : '';
-                
+
                 if (title.includes(term) || desc.includes(term)) {
                     item.style.display = 'block';
                     sectionHasMatch = true;
@@ -1173,7 +1173,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Re-bind search when app re-renders (like language change)
     const originalReRenderApp = reRenderApp;
-    reRenderApp = function() {
+    reRenderApp = function () {
         originalReRenderApp();
         // Re-append no results element because renderMenu clears menuContainer
         noResultsEl.style.display = 'none';
