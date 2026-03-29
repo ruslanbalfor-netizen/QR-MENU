@@ -335,8 +335,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 calories: i.calories,
                 prepTime: i.prep_time,
                 isKidFriendly: i.is_kid_friendly,
+                sortOrder: parseInt(i.sort_order) || 0,
                 badges: i.badges || []
-            }));
+            })).sort((a, b) => a.sortOrder - b.sortOrder);
 
         } catch (e) {
 
@@ -384,13 +385,24 @@ document.addEventListener('DOMContentLoaded', () => {
                 document.querySelectorAll('.category-btn').forEach(b => b.classList.remove('active'));
                 e.currentTarget.classList.add('active');
 
+                // FORCE FULL RENDERING to stabilize layout heights before jumping
+                const unrendered = document.querySelectorAll('.menu-section:not([data-rendered="true"])');
+                if (unrendered.length > 0) {
+                    window.renderMenu(true);
+                }
+
                 // Disable IntersectionObserver temporarily while smoothly scrolling
                 window.isClickScrolling = true;
                 clearTimeout(window.scrollSpyTimeout);
-                window.scrollSpyTimeout = setTimeout(() => { window.isClickScrolling = false; }, 800);
+                window.scrollSpyTimeout = setTimeout(() => { window.isClickScrolling = false; }, 1000);
 
                 const targetSection = document.getElementById(`section-${cat.id}`);
-                if (targetSection) targetSection.scrollIntoView({ behavior: 'smooth' });
+                if (targetSection) {
+                    const nav = document.getElementById('menu-nav');
+                    const offset = nav ? nav.offsetHeight : 100;
+                    const topPos = targetSection.getBoundingClientRect().top + window.scrollY - offset - 15;
+                    window.scrollTo({ top: topPos, behavior: 'smooth' });
+                }
             });
 
             li.appendChild(btn);
