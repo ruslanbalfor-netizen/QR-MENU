@@ -1,4 +1,4 @@
-﻿/* QR Menu Stylesheet - Clean Rewrite */
+/* QR Menu Stylesheet - Clean Rewrite */
 
 /* --- Reset & Base --- */
 * {
@@ -36,13 +36,13 @@ body {
 
 /* --- CSS Variables --- */
 :root {
-    --primary-color: #D4AF37;
-    --hover-color: #B89528;
-    --text-primary: #E5E5E5;
-    --text-secondary: #9CA3AF;
-    --bg-light: #0B0B0B;
-    --nav-bg: #1F2937;
-    --card-bg: #1F2937;
+    --primary-color: #006ba6;
+    --hover-color: #0496ff;
+    --text-primary: #0f172a;
+    --text-secondary: #6c757d;
+    --bg-light: #f8fafc;
+    --nav-bg: #ffffff;
+    --card-bg: #ffffff;
     --border-color: #e9ecef;
 }
 
@@ -120,9 +120,18 @@ body.dark-mode .toggle-thumb {
 }
 
 /* ===== GLOBAL DARK MODE THEME COLORS (MUST BE TOP LEVEL) ===== */
+/* User's Custom Luxury Dark Gold Theme */
 body.dark-mode {
-    background-color: #121212 !important;
-    color: #e0e0e0 !important;
+    background-color: #0B0B0B !important;
+    color: #E5E5E5 !important;
+    --primary-color: #D4AF37;
+    --hover-color: #B89528;
+    --text-primary: #E5E5E5;
+    --text-secondary: #9CA3AF;
+    --bg-light: #0B0B0B;
+    --nav-bg: #1F2937;
+    --card-bg: #1F2937;
+    --border-color: rgba(229, 229, 229, 0.1);
 }
 
 body.dark-mode .brand-name {
@@ -1759,4 +1768,9 @@ h1, h2, h3, h4, h5, h6, .brand-name, .data-info h4, .cart-header h2, .modal-item
 /* Headings Font Override */
 h1, h2, h3, h4, h5, h6, .brand-name, .data-info h4, .cart-header h2, .modal-item-title, .section-heading {
     font-family: 'Montserrat', sans-serif;
+}
+
+/* Luxury Category Fonts */
+.section-title, .category-btn, .category-btn span {
+    font-family: 'Playfair Display', serif !important;
 }
