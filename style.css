@@ -36,8 +36,8 @@ body {
 
 /* --- CSS Variables --- */
 :root {
-    --primary-color: #FF6B6B;
-    --hover-color: #ff5252;
+    --primary-color: #006ba6;
+    --hover-color: #0496ff;
     --text-primary: #212529;
     --text-secondary: #6c757d;
     --bg-light: #f8f9fa;
@@ -743,7 +743,7 @@ body.dark-mode .theme-option.active {
 #menu-search-input:focus {
     background-color: white;
     border-color: var(--primary-color);
-    box-shadow: 0 0 0 3px rgba(255, 107, 107, 0.15);
+    box-shadow: 0 0 0 3px rgba(4, 150, 255, 0.15);
 }
 
 #menu-search-input::placeholder {

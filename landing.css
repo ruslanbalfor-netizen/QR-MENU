@@ -1,7 +1,7 @@
 /* --- Landing Page Premium Design System --- */
 .landing-page {
     min-height: 100vh;
-    background: #1f2937;
+    background: #006ba6;
     display: flex;
     flex-direction: column;
     font-family: 'Inter', sans-serif;
@@ -15,9 +15,9 @@
 body.dark-mode .landing-page {
     background: #050505;
     background-image: 
-        radial-gradient(at 0% 0%, rgba(16, 185, 129, 0.03) 0, transparent 50%), 
-        radial-gradient(at 50% 0%, rgba(59, 130, 246, 0.03) 0, transparent 50%),
-        radial-gradient(at 100% 0%, rgba(16, 185, 129, 0.03) 0, transparent 50%);
+        radial-gradient(at 0% 0%, rgba(0, 107, 166, 0.03) 0, transparent 50%), 
+        radial-gradient(at 50% 0%, rgba(4, 150, 255, 0.03) 0, transparent 50%),
+        radial-gradient(at 100% 0%, rgba(0, 107, 166, 0.03) 0, transparent 50%);
     color: #f0f0f0;
 }
 
@@ -128,14 +128,13 @@ body.dark-mode .nav-cta {
 .hero-badge {
     display: inline-block;
     padding: 10px 24px;
-    background: linear-gradient(135deg, rgba(16,185,129,0.1), rgba(59,130,246,0.1));
-    border: 1px solid rgba(16,185,129,0.2);
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
     border-radius: 50px;
     font-size: 1.05rem;
     font-weight: 700;
     letter-spacing: 1px;
     margin-bottom: 25px;
-    color: #444;
     position: relative;
     overflow: hidden;
     animation: badgePulse 3s ease-in-out infinite;
@@ -176,7 +175,7 @@ body.dark-mode .hero-badge {
 }
 
 .gradient-text {
-    background: linear-gradient(135deg, #10b981, #3b82f6);
+    background: linear-gradient(135deg, #ffbc42, #ffffff);
     -webkit-background-clip: text;
     background-clip: text;
     -webkit-text-fill-color: transparent;
@@ -185,7 +184,7 @@ body.dark-mode .hero-badge {
 .landing-subtitle {
     font-size: 1.2rem;
     line-height: 1.6;
-    background: linear-gradient(135deg, #10b981, #3b82f6);
+    background: linear-gradient(135deg, #ffffff, #e2e8f0);
     -webkit-background-clip: text;
     background-clip: text;
     -webkit-text-fill-color: transparent;
@@ -214,19 +213,16 @@ body.dark-mode .landing-subtitle {
     transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
-.demo-btn {
-    background: #ffffff;
-    color: #000000 !important;
+.custom-glow-btn {
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(10px);
 }
 
-body.dark-mode .demo-btn {
-    background: #fff;
-    color: #000;
-}
-
-.contact-btn {
-    background: #25D366;
-    color: #fff;
+.custom-glow-btn:hover {
+    background: rgba(255, 255, 255, 0.2);
+    box-shadow: 0 10px 30px rgba(255, 188, 66, 0.2);
+    transform: translateY(-5px);
 }
 
 .landing-cta-btn:hover {
@@ -271,25 +267,25 @@ body.dark-mode .demo-btn {
     position: absolute;
     width: 400px;
     height: 400px;
-    background: radial-gradient(circle, rgba(16, 185, 129, 0.18) 0%, rgba(16, 185, 129, 0) 70%);
+    background: radial-gradient(circle, rgba(0, 107, 166, 0.18) 0%, rgba(0, 107, 166, 0) 70%);
     border-radius: 50%;
     filter: blur(50px);
     animation: blobMove 15s infinite alternate;
 }
 
 body.dark-mode .blob {
-    background: radial-gradient(circle, rgba(16, 185, 129, 0.25) 0%, rgba(16, 185, 129, 0) 70%);
+    background: radial-gradient(circle, rgba(0, 107, 166, 0.25) 0%, rgba(0, 107, 166, 0) 70%);
 }
 
 .blob-1 { top: -100px; right: -100px; }
 .blob-2 { 
     bottom: 0; 
     left: 50%; 
-    background: radial-gradient(circle, rgba(59, 130, 246, 0.12) 0%, rgba(59, 130, 246, 0) 70%); 
+    background: radial-gradient(circle, rgba(4, 150, 255, 0.12) 0%, rgba(4, 150, 255, 0) 70%); 
 }
 
 body.dark-mode .blob-2 {
-    background: radial-gradient(circle, rgba(59, 130, 246, 0.25) 0%, rgba(59, 130, 246, 0) 70%);
+    background: radial-gradient(circle, rgba(4, 150, 255, 0.25) 0%, rgba(4, 150, 255, 0) 70%);
 }
 .blob-3 { top: 20%; left: -100px; animation-duration: 20s; }
 
@@ -308,7 +304,7 @@ body.dark-mode .blob-2 {
 
 .bg-alt {
     max-width: 100%;
-    background: #111827;
+    background: #0496ff;
 }
 
 body.dark-mode .bg-alt {
@@ -373,49 +369,49 @@ body.dark-mode .feature-card {
     transform: scale(1.1) translateY(-8px);
 }
 
-/* 1. Ultra Sürət - Neon Cyan/Blue */
+/* 1. Ultra Sürət */
 .icon-speed {
-    background: linear-gradient(135deg, #0cebeb, #20e3b2, #29ffc6);
-    box-shadow: 0 10px 20px rgba(32, 227, 178, 0.3);
+    background: linear-gradient(135deg, #006ba6, #0496ff);
+    box-shadow: 0 10px 20px rgba(4, 150, 255, 0.3);
 }
 .feature-card:hover .icon-speed {
-    box-shadow: 0 15px 30px rgba(32, 227, 178, 0.5);
+    box-shadow: 0 15px 30px rgba(4, 150, 255, 0.5);
 }
 .feature-card:hover .icon-speed i {
     animation: flash 0.8s ease-in-out infinite alternate;
 }
 
-/* 2. Dinamik Rənglər - Vibrant Pink/Purple */
+/* 2. Dinamik Rənglər */
 .icon-colors {
-    background: linear-gradient(135deg, #f857a6, #ff5858);
-    box-shadow: 0 10px 20px rgba(248, 87, 166, 0.3);
+    background: linear-gradient(135deg, #006ba6, #0496ff);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
 }
 .feature-card:hover .icon-colors {
-    box-shadow: 0 15px 30px rgba(248, 87, 166, 0.5);
+    box-shadow: 0 15px 30px rgba(4, 150, 255, 0.5);
 }
 .feature-card:hover .icon-colors i {
     animation: spin 3s linear infinite;
 }
 
-/* 3. Sürətli Sifariş - Bright Whatsapp Green */
+/* 3. Sürətli Sifariş */
 .icon-order {
-    background: linear-gradient(135deg, #11998e, #38ef7d);
-    box-shadow: 0 10px 20px rgba(56, 239, 125, 0.3);
+    background: linear-gradient(135deg, #006ba6, #0496ff);
+    box-shadow: 0 10px 20px rgba(4, 150, 255, 0.3);
 }
 .feature-card:hover .icon-order {
-    box-shadow: 0 15px 30px rgba(56, 239, 125, 0.5);
+    box-shadow: 0 15px 30px rgba(4, 150, 255, 0.5);
 }
 .feature-card:hover .icon-order i {
     animation: ringShake 0.4s ease-in-out infinite alternate;
 }
 
-/* 4. Limitsiz Scan - Deep Azure/Electric */
+/* 4. Limitsiz Scan */
 .icon-scan {
-    background: linear-gradient(135deg, #00c6ff, #0072ff);
-    box-shadow: 0 10px 20px rgba(0, 114, 255, 0.3);
+    background: linear-gradient(135deg, #006ba6, #0496ff);
+    box-shadow: 0 10px 20px rgba(4, 150, 255, 0.3);
 }
 .feature-card:hover .icon-scan {
-    box-shadow: 0 15px 30px rgba(0, 114, 255, 0.5);
+    box-shadow: 0 15px 30px rgba(4, 150, 255, 0.5);
 }
 .feature-card:hover .icon-scan i {
     animation: scanFloat 1.2s ease-in-out infinite alternate;
@@ -449,7 +445,7 @@ body.dark-mode .feature-card {
 .feature-card p {
     font-size: 0.95rem;
     line-height: 1.6;
-    background: linear-gradient(135deg, #10b981, #3b82f6);
+    background: linear-gradient(135deg, #006ba6, #0496ff);
     -webkit-background-clip: text;
     background-clip: text;
     -webkit-text-fill-color: transparent;
@@ -478,7 +474,7 @@ body.dark-mode .feature-card p {
 .step-num {
     font-size: 2.5rem;
     font-weight: 900;
-    color: rgba(16, 185, 129, 0.2);
+    color: rgba(255, 255, 255, 0.2);
     line-height: 1;
 }
 
@@ -491,7 +487,7 @@ body.dark-mode .feature-card p {
 .step-text p {
     font-size: 0.95rem;
     line-height: 1.5;
-    background: linear-gradient(135deg, #10b981, #3b82f6);
+    background: linear-gradient(135deg, #ffffff, #e2e8f0);
     -webkit-background-clip: text;
     background-clip: text;
     -webkit-text-fill-color: transparent;
@@ -501,7 +497,7 @@ body.dark-mode .feature-card p {
 /* Footer */
 .landing-footer {
     padding: 60px 25px;
-    border-top: 1px solid rgba(0,0,0,0.05);
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 body.dark-mode .landing-footer {
@@ -528,15 +524,14 @@ body.dark-mode .landing-footer {
     gap: 25px;
 }
 
-.footer-links a {
+.footer-links a.gradient-text {
     text-decoration: none;
     font-size: 0.9rem;
-    color: #888;
-    transition: color 0.2s;
+    transition: all 0.3s;
 }
 
-.footer-links a:hover {
-    color: #10b981;
+.footer-links a.gradient-text:hover {
+    filter: drop-shadow(0 0 8px rgba(255, 188, 66, 0.5));
 }
 
 /* Responsive */
