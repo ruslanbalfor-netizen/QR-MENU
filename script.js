@@ -476,7 +476,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 metaHtml = `<div class="item-meta">
                     ${item.calories ? `<span class="meta-info"><i class="fa-solid fa-fire text-muted"></i> ${item.calories} kcal</span>` : ''}
                     ${item.prepTime ? `<span class="meta-info"><i class="fa-regular fa-clock"></i> ${item.prepTime}</span>` : ''}
-                    ${item.isKidFriendly ? `<span class="meta-info" style="color:#2563eb;"><i class="fa-solid fa-child"></i> ${translations.kidFriendly[currentLang] || translations.kidFriendly.az}</span>` : ''}
+                    ${item.isKidFriendly ? `<span class="meta-info"><i class="fa-solid fa-child"></i> ${translations.kidFriendly[currentLang] || translations.kidFriendly.az}</span>` : ''}
                 </div>`;
             }
 
@@ -674,14 +674,39 @@ document.addEventListener('DOMContentLoaded', () => {
     const closeItemBtn = document.getElementById('close-item-btn');
     const modalItemAddBtn = document.getElementById('modal-add-btn');
     const modalItemImg = document.getElementById('modal-item-img');
+    const modalQtyMinus = document.getElementById('modal-qty-minus');
+    const modalQtyPlus = document.getElementById('modal-qty-plus');
+    const modalQtyDisplay = document.getElementById('modal-qty-display');
 
     let currentModalItemId = null;
+    let currentModalQty = 1;
+
+    if (modalQtyPlus) {
+        modalQtyPlus.onclick = () => {
+            currentModalQty++;
+            if (modalQtyDisplay) modalQtyDisplay.textContent = currentModalQty;
+            playTouchSound();
+        };
+    }
+
+    if (modalQtyMinus) {
+        modalQtyMinus.onclick = () => {
+            if (currentModalQty > 1) {
+                currentModalQty--;
+                if (modalQtyDisplay) modalQtyDisplay.textContent = currentModalQty;
+                playTouchSound();
+            }
+        };
+    }
 
     function openItemDetailModal(itemId) {
         const item = appData.items.find(i => String(i.id) === String(itemId));
         if (!item) return;
 
         currentModalItemId = itemId;
+        currentModalQty = 1;
+        if (modalQtyDisplay) modalQtyDisplay.textContent = '1';
+
         const itemName = item.name[currentLang] || item.name.az;
         const itemDesc = item.description[currentLang] || item.description.az;
 
@@ -703,7 +728,7 @@ document.addEventListener('DOMContentLoaded', () => {
         let metaHtml = '';
         if (item.calories) metaHtml += `<span class="meta-info"><i class="fa-solid fa-fire text-muted"></i> ${item.calories} kcal</span> `;
         if (item.prepTime) metaHtml += `<span class="meta-info"><i class="fa-regular fa-clock text-muted"></i> ${item.prepTime}</span> `;
-        if (item.isKidFriendly) metaHtml += `<span class="meta-info" style="color:#2563eb;"><i class="fa-solid fa-child"></i> ${translations.kidFriendly[currentLang] || translations.kidFriendly.az}</span>`;
+        if (item.isKidFriendly) metaHtml += `<span class="meta-info"><i class="fa-solid fa-child"></i> ${translations.kidFriendly[currentLang] || translations.kidFriendly.az}</span>`;
         metaContainer.innerHTML = metaHtml;
 
         itemDetailModal.classList.add('active');
@@ -738,7 +763,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     modalItemAddBtn.addEventListener('click', () => {
         if (currentModalItemId) {
-            addToCart(currentModalItemId);
+            addToCart(currentModalItemId, currentModalQty);
 
             // Fly to cart animation from modal
             const imgEl = document.getElementById('modal-item-img');
@@ -818,7 +843,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const checkoutBtn = document.getElementById('checkout-btn');
     const customerWaNumberEl = document.getElementById('customer-wa-number');
 
-    function addToCart(itemId) {
+    function addToCart(itemId, quantity = 1) {
         const item = appData.items.find(i => String(i.id) === String(itemId));
         if (!item) return;
 
@@ -826,9 +851,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const existingItem = cart.find(c => String(c.id) === String(itemId));
         if (existingItem) {
-            existingItem.qty += 1;
+            existingItem.qty += quantity;
         } else {
-            cart.push({ ...item, qty: 1 });
+            cart.push({ ...item, qty: quantity });
         }
 
         updateCartState();
