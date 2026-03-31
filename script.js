@@ -273,9 +273,11 @@ document.addEventListener('DOMContentLoaded', () => {
             // Apply the brand theme from database
             if (placeData.theme_variant) {
                 applyTheme(placeData.theme_variant);
-                // Hide manual theme picker from customers
-                const themeSwitch = document.getElementById('theme-switch');
-                if (themeSwitch) themeSwitch.style.display = 'none';
+                // Hide manual theme picker from customers (except for demo)
+                if (placeSlug !== 'ruismenu') {
+                    const themeSwitch = document.getElementById('theme-switch');
+                    if (themeSwitch) themeSwitch.style.display = 'none';
+                }
             }
             appData.branding.currency = placeData.currency || 'AZN';
             appData.branding.service_charge = placeData.service_charge || 0;
