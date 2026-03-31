@@ -282,6 +282,21 @@ body.dark-mode .spinner {
     border-top-color: var(--primary-color);
 }
 
+/* Dark Mode Search Input Override */
+body.dark-mode #menu-search-input {
+    background-color: #2a2a2a;
+    color: #e0e0e0;
+    border-color: rgba(255, 255, 255, 0.1);
+}
+
+body.dark-mode #menu-search-input::placeholder {
+    color: #999999;
+}
+
+body.dark-mode .search-icon {
+    color: #999999;
+}
+
 /* --- CUSTOM THEMES (LIGHT MODE ONLY) --- */
 body.theme-rum-chocolate:not(.dark-mode) {
     background-color: #450E16 !important;
@@ -732,7 +747,7 @@ body.dark-mode .theme-option.active {
     left: 14px;
     top: 50%;
     transform: translateY(-50%);
-    color: var(--text-secondary);
+    color: #555555;
     font-size: 1rem;
 }
 
@@ -742,21 +757,21 @@ body.dark-mode .theme-option.active {
     border: 1px solid var(--border-color);
     border-radius: 20px;
     font-size: 0.95rem;
-    background-color: var(--bg-light);
-    color: var(--text-primary);
+    background-color: #ffffff; /* Always white in light mode for best contrast */
+    color: #111111;
+    font-weight: 500;
     outline: none;
     transition: all 0.3s ease;
     font-family: inherit;
 }
 
 #menu-search-input:focus {
-    background-color: var(--bg-light);
     border-color: var(--primary-color);
     box-shadow: 0 0 0 3px rgba(4, 150, 255, 0.15);
 }
 
 #menu-search-input::placeholder {
-    color: #adb5bd;
+    color: #666666;
 }
 
 .clear-search-btn {
@@ -1773,4 +1788,5 @@ h1, h2, h3, h4, h5, h6, .brand-name, .data-info h4, .cart-header h2, .modal-item
 /* Luxury Category Fonts */
 .section-title, .category-btn, .category-btn span {
     font-family: 'Playfair Display', serif !important;
+    font-weight: 800 !important;
 }
