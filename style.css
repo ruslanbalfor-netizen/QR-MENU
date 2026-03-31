@@ -1826,11 +1826,6 @@ body.dark-mode .feature-icon {
 }
 
 /* Headings Font Override */
-h1, h2, h3, h4, h5, h6, .brand-name, .data-info h4, .cart-header h2, .modal-item-title {
-    font-family: 'Montserrat', sans-serif;
-}
-
-/* Headings Font Override */
 h1, h2, h3, h4, h5, h6, .brand-name, .data-info h4, .cart-header h2, .modal-item-title, .section-heading {
     font-family: 'Montserrat', sans-serif;
 }

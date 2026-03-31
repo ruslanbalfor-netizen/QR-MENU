@@ -173,18 +173,28 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     };
 
-    const fallbackData = {
-        categories: [{ id: "main-courses", name: { az: "Əsas yeməklər", en: "Main Courses", ru: "Основные блюда" } }],
-        items: [
-            {
-                id: "1", categoryId: "main-courses", price: 8.50,
-                name: { az: "Səhifə Yüklənir...", en: "Loading...", ru: "Загрузка..." },
-                description: { az: "Təsvir", en: "Desc", ru: "Опис" },
-                image: "https://placehold.co/100x100/eeeeee/999999?text=Test",
-                badges: []
-            }
-        ]
-    };
+    // --- Security & Sanitization ---
+    function escapeHTML(str) {
+        if (!str) return '';
+        return String(str)
+            .replace(/&/g, "&amp;")
+            .replace(/</g, "&lt;")
+            .replace(/>/g, "&gt;")
+            .replace(/"/g, "&quot;")
+            .replace(/'/g, "&#039;");
+    }
+
+    function sanitizeHTML(str) {
+        if (!str) return '';
+        // Escape all, then allow specific safe tags
+        let escaped = escapeHTML(str);
+        return escaped
+            .replace(/&lt;br\s*\/?&gt;/gi, '<br>')
+            .replace(/&lt;b&gt;/gi, '<b>')
+            .replace(/&lt;\/b&gt;/gi, '</b>')
+            .replace(/&lt;i&gt;/gi, '<i>')
+            .replace(/&lt;\/i&gt;/gi, '</i>');
+    }
 
     window.fetchMenuData = async function () {
         try {
@@ -480,11 +490,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 </div>`;
             }
 
-            const itemName = item.name[currentLang] || item.name.az || '';
-            const itemDesc = item.description[currentLang] || item.description.az || '';
+            const itemName = escapeHTML(item.name[currentLang] || item.name.az || '');
+            const itemDesc = sanitizeHTML(item.description[currentLang] || item.description.az || '');
 
             itemCard.innerHTML = `
-                <img src="${item.image}" alt="${itemName}" class="item-image" loading="lazy">
+                <img src="${escapeHTML(item.image)}" alt="${itemName}" class="item-image" loading="lazy">
                 <div class="item-content">
                     <div class="item-header">
                         <h3 class="item-title">${itemName}</h3>
@@ -493,7 +503,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     <p class="item-description">${itemDesc}</p>
                     ${metaHtml}
                     ${badgesHtml}
-                    <button class="add-to-cart-btn" data-id="${item.id}">
+                    <button class="add-to-cart-btn" data-id="${escapeHTML(item.id)}">
                         <i class="fa-solid fa-plus"></i> ${currentLang === 'az' ? 'Səbətə at' : currentLang === 'ru' ? 'В корзину' : 'Add to cart'}
                     </button>
                 </div>
@@ -707,27 +717,27 @@ document.addEventListener('DOMContentLoaded', () => {
         currentModalQty = 1;
         if (modalQtyDisplay) modalQtyDisplay.textContent = '1';
 
-        const itemName = item.name[currentLang] || item.name.az;
-        const itemDesc = item.description[currentLang] || item.description.az;
+        const itemName = escapeHTML(item.name[currentLang] || item.name.az);
+        const itemDesc = sanitizeHTML(item.description[currentLang] || item.description.az);
 
         const modalImg = document.getElementById('modal-item-img');
-        modalImg.src = item.image;
+        modalImg.src = escapeHTML(item.image);
         document.getElementById('modal-item-title').textContent = itemName;
         document.getElementById('modal-item-price').textContent = `${Number(item.price).toFixed(2)} AZN`;
-        document.getElementById('modal-item-desc').innerHTML = itemDesc.replace(/\n/g, '<br>');
+        document.getElementById('modal-item-desc').innerHTML = itemDesc;
 
         // Badges & Meta
         const badgesContainer = document.getElementById('modal-item-badges');
         if (item.badges && item.badges.length > 0) {
-            badgesContainer.innerHTML = item.badges.map(b => `<span class="badge">${b}</span>`).join(' ');
+            badgesContainer.innerHTML = item.badges.map(b => `<span class="badge">${escapeHTML(b)}</span>`).join(' ');
         } else {
             badgesContainer.innerHTML = '';
         }
 
         const metaContainer = document.getElementById('modal-item-meta');
         let metaHtml = '';
-        if (item.calories) metaHtml += `<span class="meta-info"><i class="fa-solid fa-fire text-muted"></i> ${item.calories} kcal</span> `;
-        if (item.prepTime) metaHtml += `<span class="meta-info"><i class="fa-regular fa-clock text-muted"></i> ${item.prepTime}</span> `;
+        if (item.calories) metaHtml += `<span class="meta-info"><i class="fa-solid fa-fire text-muted"></i> ${escapeHTML(item.calories)} kcal</span> `;
+        if (item.prepTime) metaHtml += `<span class="meta-info"><i class="fa-regular fa-clock text-muted"></i> ${escapeHTML(item.prepTime)}</span> `;
         if (item.isKidFriendly) metaHtml += `<span class="meta-info"><i class="fa-solid fa-child"></i> ${translations.kidFriendly[currentLang] || translations.kidFriendly.az}</span>`;
         metaContainer.innerHTML = metaHtml;
 
