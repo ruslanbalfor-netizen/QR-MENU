@@ -269,6 +269,14 @@ document.addEventListener('DOMContentLoaded', () => {
             const coverEl = document.getElementById('header-cover');
             if (logoEl) logoEl.src = placeData.logo || "https://placehold.co/150x150/ffffff/cccccc?text=Logo";
             if (coverEl) coverEl.style.backgroundImage = `url('${placeData.cover || 'https://placehold.co/800x300/333/666?text=Cover'}')`;
+            
+            // Apply the brand theme from database
+            if (placeData.theme_variant) {
+                applyTheme(placeData.theme_variant);
+                // Hide manual theme picker from customers
+                const themeSwitch = document.getElementById('theme-switch');
+                if (themeSwitch) themeSwitch.style.display = 'none';
+            }
             appData.branding.currency = placeData.currency || 'AZN';
             appData.branding.service_charge = placeData.service_charge || 0;
 

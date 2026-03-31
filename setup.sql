@@ -11,6 +11,7 @@ CREATE TABLE IF NOT EXISTS public.places (
     instagram TEXT,
     facebook TEXT,
     google_url TEXT,
+    theme_variant TEXT DEFAULT 'default',
     created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
 

@@ -5,12 +5,21 @@ let activePlaceName = null;
 let allCategories = [];
 window.cachedPlaces = [];
 
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
     supabaseClientLocal = window.supabaseClient;
 
     if (!supabaseClientLocal) {
         showToast("Supabase bağlantısı tapılmadı!", "error");
+    } else {
+        // Essential check: if no session, kick to login
+        const { data: { session } } = await supabaseClientLocal.auth.getSession();
+        if (!session) {
+            window.location.href = 'login.html';
+            return;
+        }
     }
+
+
 
     // ==== View Switching ====
     const navItems = document.querySelectorAll('.sidebar .nav-item');
@@ -48,6 +57,18 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 });
+
+// ==== Authentication & Session ====
+async function logout() {
+    if (!supabaseClientLocal) return;
+    const { error } = await supabaseClientLocal.auth.signOut();
+    if (error) {
+        showToast("Çıxış xətası: " + error.message, "error");
+    } else {
+        window.location.href = 'login.html';
+    }
+}
+window.logout = logout;
 
 function showToast(message, type = 'success') {
     const container = document.getElementById('toast-container');
@@ -379,6 +400,7 @@ document.getElementById('place-form').addEventListener('submit', async (e) => {
         const instagram = document.getElementById('place-v-instagram').value || null;
         const facebook = document.getElementById('place-v-facebook').value || null;
         const google_url = document.getElementById('place-v-google').value || null;
+        const theme_variant = document.getElementById('place-v-theme').value || 'default';
 
         const logoFile = document.getElementById('place-v-logo-file').files[0];
         const coverFile = document.getElementById('place-v-cover-file').files[0];
@@ -396,7 +418,7 @@ document.getElementById('place-form').addEventListener('submit', async (e) => {
             cover = await uploadImage(coverFile, 'covers');
         }
 
-        const payload = { name, slug, currency, service_charge, logo, cover, phone, whatsapp, instagram, facebook, google_url };
+        const payload = { name, slug, currency, service_charge, logo, cover, phone, whatsapp, instagram, facebook, google_url, theme_variant };
 
         let error;
         if (id) {
@@ -427,6 +449,7 @@ window.openPlaceModal = async function (id = null) {
     document.getElementById('place-form').reset();
     document.getElementById('place-v-id').value = '';
     document.getElementById('place-v-service-charge').value = '0';
+    document.getElementById('place-v-theme').value = 'default';
     document.getElementById('place-modal-title').innerText = "Yeni Məkan";
     document.getElementById('place-logo-preview').style.display = 'none';
     document.getElementById('place-cover-preview').style.display = 'none';
@@ -446,6 +469,7 @@ window.openPlaceModal = async function (id = null) {
             document.getElementById('place-v-instagram').value = data.instagram || '';
             document.getElementById('place-v-facebook').value = data.facebook || '';
             document.getElementById('place-v-google').value = data.google_url || '';
+            document.getElementById('place-v-theme').value = data.theme_variant || 'default';
 
             document.getElementById('place-v-logo').value = data.logo || '';
             document.getElementById('place-v-logo-file').value = '';
