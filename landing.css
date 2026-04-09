@@ -1,4 +1,4 @@
-﻿/* --- Landing Page Premium Design System --- */
+/* --- Landing Page Premium Design System --- */
 .landing-page {
     min-height: 100vh;
     background: #0B0B0B;
@@ -113,9 +113,9 @@ body.dark-mode .nav-cta {
     position: relative;
     padding: 60px 25px 60px;
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 1fr 1.2fr;
     align-items: center;
-    max-width: 1200px;
+    max-width: 1250px;
     margin: 0 auto;
     gap: 40px;
 }
@@ -240,15 +240,16 @@ body.dark-mode .landing-subtitle {
 
 .hero-showcase-img {
     width: 100%;
-    max-width: 580px;
+    max-width: 750px;
     height: auto;
     border-radius: 12px;
     filter: drop-shadow(0 30px 60px rgba(0,0,0,0.3));
     transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    transform-origin: center center;
 }
 
 .hero-showcase-img:hover {
-    transform: scale(1.03) translateY(-5px);
+    transform: scale(1.08) translateY(-5px);
 }
 
 /* Blobs Animation */
