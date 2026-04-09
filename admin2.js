@@ -795,7 +795,8 @@ document.getElementById('item-form').addEventListener('submit', async (e) => {
             image: image || null,
             calories: calories ? parseInt(calories) : null,
             prep_time: prepTime || null,
-            is_kid_friendly: document.getElementById('item-v-is_kid_friendly').checked
+            is_kid_friendly: document.getElementById('item-v-is_kid_friendly').checked,
+            badges: document.getElementById('item-v-is_vegan') && document.getElementById('item-v-is_vegan').checked ? ['Vegan'] : []
         };
 
         let dbError;
@@ -858,6 +859,8 @@ window.openItemModal = async function (id = null) {
             document.getElementById('item-v-prep_time').value = data.prep_time || '';
             const kidBox = document.getElementById('item-v-is_kid_friendly');
             if (kidBox) kidBox.checked = !!data.is_kid_friendly;
+            const veganBox = document.getElementById('item-v-is_vegan');
+            if (veganBox) veganBox.checked = data.badges && data.badges.includes('Vegan');
         }
     }
     openModal('item-modal');

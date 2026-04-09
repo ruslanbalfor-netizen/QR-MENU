@@ -983,6 +983,15 @@ body.dark-mode .theme-option.active {
     font-size: 0.7rem;
     font-weight: 600;
     margin-right: 4px;
+    background-color: var(--card-bg, #f1f5f9);
+    color: var(--text-primary, #475569);
+    border: 1px solid var(--border-color, #e2e8f0);
+}
+
+.badge-vegan {
+    background-color: #dcfce7 !important;
+    color: #16a34a !important;
+    border-color: #bbf7d0 !important;
 }
 
 .badge-new {

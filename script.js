@@ -487,7 +487,7 @@ document.addEventListener('DOMContentLoaded', () => {
             let badgesHtml = '';
             if (item.badges && item.badges.length > 0) {
                 badgesHtml = `<div class="item-badges">
-                    ${item.badges.map(b => `<span class="badge">${b}</span>`).join('')}
+                    ${item.badges.map(b => `<span class="badge ${b === 'Vegan' ? 'badge-vegan' : ''}">${b}</span>`).join('')}
                 </div>`;
             }
 
@@ -739,7 +739,7 @@ document.addEventListener('DOMContentLoaded', () => {
         // Badges & Meta
         const badgesContainer = document.getElementById('modal-item-badges');
         if (item.badges && item.badges.length > 0) {
-            badgesContainer.innerHTML = item.badges.map(b => `<span class="badge">${escapeHTML(b)}</span>`).join(' ');
+            badgesContainer.innerHTML = item.badges.map(b => `<span class="badge ${b === 'Vegan' ? 'badge-vegan' : ''}">${escapeHTML(b)}</span>`).join(' ');
         } else {
             badgesContainer.innerHTML = '';
         }
