@@ -113,9 +113,9 @@ body.dark-mode .nav-cta {
     position: relative;
     padding: 60px 25px 60px;
     display: grid;
-    grid-template-columns: 1fr 1.2fr;
+    grid-template-columns: 1fr 1.4fr;
     align-items: center;
-    max-width: 1250px;
+    max-width: 1400px;
     margin: 0 auto;
     gap: 40px;
 }
@@ -240,7 +240,7 @@ body.dark-mode .landing-subtitle {
 
 .hero-showcase-img {
     width: 100%;
-    max-width: 750px;
+    max-width: 950px;
     height: auto;
     border-radius: 12px;
     filter: drop-shadow(0 30px 60px rgba(0,0,0,0.3));
@@ -249,7 +249,7 @@ body.dark-mode .landing-subtitle {
 }
 
 .hero-showcase-img:hover {
-    transform: scale(1.08) translateY(-5px);
+    transform: scale(1.15) translateY(-5px);
 }
 
 /* Blobs Animation */
