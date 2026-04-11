@@ -246,7 +246,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 .eq('place_id', placeData.id);
 
             if (cError) throw cError;
-            catsData = cData || [];
+            // Filter out inactive categories (if is_active is explicitly false)
+            catsData = (cData || []).filter(c => c.is_active !== false);
 
             const catIds = catsData.map(c => c.id);
             if (catIds.length > 0) {
@@ -256,7 +257,8 @@ document.addEventListener('DOMContentLoaded', () => {
                     .in('category_id', catIds);
 
                 if (itemsError) throw itemsError;
-                itemsData = iData || [];
+                // Filter out inactive items
+                itemsData = (iData || []).filter(i => i.is_active !== false);
             } else {
                 itemsData = [];
             }

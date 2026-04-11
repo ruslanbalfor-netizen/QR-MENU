@@ -326,6 +326,13 @@
                     <input type="number" id="cat-v-sort_order" class="form-control" value="0" min="0" required>
                     <small style="display:block; margin-top:5px; color:#6c757d;">Rəqəm yazın. Kiçik rəqəm (məs: 1) menyuda daha yuxarıda/əvvəldə görünəcək.</small>
                 </div>
+
+                <div class="form-group" style="display: flex; align-items: center; gap: 10px; background: #fff3cd; padding: 12px; border-radius: 10px; border: 1px solid #ffeeba;">
+                    <input type="checkbox" id="cat-v-is_active" style="width: 20px; height: 20px; cursor: pointer;" checked>
+                    <label for="cat-v-is_active" style="margin-bottom: 0; cursor: pointer; font-weight: 600; color: #856404; display: flex; align-items: center; gap: 8px;">
+                        <i class="fa-solid fa-eye"></i> Menyuda Görünsün (Aktiv)
+                    </label>
+                </div>
                 
                 <div class="form-group">
                     <label>Kateqoriya Adı</label>
@@ -407,6 +414,12 @@
                 </div>
 
                 <div style="display:flex; gap: 15px; margin-bottom: 20px; flex-wrap: wrap;">
+                    <div class="form-group" style="flex:1; min-width: 150px; display: flex; align-items: center; gap: 10px; background: #fff3cd; padding: 12px; border-radius: 10px; margin: 0; border: 1px solid #ffeeba;">
+                        <input type="checkbox" id="item-v-is_active" style="width: 20px; height: 20px; cursor: pointer;" checked>
+                        <label for="item-v-is_active" style="margin-bottom: 0; cursor: pointer; font-weight: 600; color: #856404; display: flex; align-items: center; gap: 8px;">
+                            <i class="fa-solid fa-eye"></i> Aktiv
+                        </label>
+                    </div>
                     <div class="form-group" style="flex:1; min-width: 150px; display: flex; align-items: center; gap: 10px; background: #e0f2fe; padding: 12px; border-radius: 10px; margin: 0;">
                         <input type="checkbox" id="item-v-is_kid_friendly" style="width: 20px; height: 20px; cursor: pointer;">
                         <label for="item-v-is_kid_friendly" style="margin-bottom: 0; cursor: pointer; font-weight: 600; color: #0369a1; display: flex; align-items: center; gap: 8px;">

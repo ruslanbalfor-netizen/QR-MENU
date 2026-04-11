@@ -558,17 +558,24 @@ async function renderCategories() {
             const name = cat.name_az || cat.name_en || cat.name_ru || cat.id;
             const imgHtml = cat.image ? `<img src="${cat.image}" style="width:40px;height:40px;border-radius:50%;object-fit:cover;border:1px solid #ddd;">` : `<div style="width:40px;height:40px;border-radius:50%;background:#eee;display:flex;align-items:center;justify-content:center;"><i class="fa-solid fa-image text-muted"></i></div>`;
 
+            const isActive = cat.is_active !== false;
+            const opacityStyle = isActive ? '' : 'opacity:0.6; background-color:#f8f9fa;';
+            const statusBadge = isActive ? '' : '<span style="color:var(--danger); font-size:0.8rem; margin-left:10px;"><i class="fa-solid fa-eye-slash"></i> Passiv</span>';
+            const toggleIcon = isActive ? '<i class="fa-solid fa-eye-slash"></i>' : '<i class="fa-solid fa-eye"></i>';
+
             const item = document.createElement('div');
             item.className = 'data-item';
+            item.style.cssText = opacityStyle;
             item.innerHTML = `
                 <div class="data-info" style="display:flex; gap:15px; align-items:center;">
                     ${imgHtml}
                     <div>
-                        <h4>${name}</h4>
+                        <h4>${name} ${statusBadge}</h4>
                         <p>ID: ${cat.id} <span style="margin-left:8px; color:#2563eb; font-weight:bold;">| Sıra: ${cat.sort_order || 0}</span></p>
                     </div>
                 </div>
                 <div class="data-actions">
+                    <button class="btn btn-outline" title="Aktiv/Passiv" onclick="toggleCategoryActive('${cat.id}', ${!isActive})">${toggleIcon}</button>
                     <button class="btn btn-outline" onclick="openCategoryModal('${cat.id}')"><i class="fa-solid fa-pen"></i></button>
                     <button class="btn btn-danger" onclick="deleteCategory('${cat.id}')"><i class="fa-solid fa-trash"></i></button>
                 </div>
@@ -577,6 +584,17 @@ async function renderCategories() {
         });
     } catch (e) {
         list.innerHTML = "Xəta: " + e.message;
+    }
+}
+
+window.toggleCategoryActive = async function (id, makeActive) {
+    try {
+        const { error } = await supabaseClientLocal.from('categories').update({ is_active: makeActive }).eq('id', id);
+        if (error) throw error;
+        renderCategories();
+        showToast(makeActive ? "Kateqoriya aktiv edildi." : "Kateqoriya passiv (gizli) edildi.");
+    } catch (e) {
+        showToast("Status dəyişərkən xəta: " + e.message, "error");
     }
 }
 
@@ -617,7 +635,8 @@ document.getElementById('category-form').addEventListener('submit', async (e) =>
             name_en: nameEn,
             name_ru: nameRu,
             image: image || null,
-            sort_order: parseInt(document.getElementById('cat-v-sort_order').value) || 0
+            sort_order: parseInt(document.getElementById('cat-v-sort_order').value) || 0,
+            is_active: document.getElementById('cat-v-is_active').checked
         };
 
         const { error } = await supabaseClientLocal.from('categories').upsert([payload]);
@@ -639,6 +658,8 @@ window.openCategoryModal = async function (id = null) {
     document.getElementById('category-form').reset();
     document.getElementById('cat-v-id').value = '';
     document.getElementById('cat-v-sort_order').value = '0';
+    const activeBox = document.getElementById('cat-v-is_active');
+    if (activeBox) activeBox.checked = true;
     document.getElementById('cat-preview-img').style.display = 'none';
     document.getElementById('cat-modal-title').innerText = "Yeni Kateqoriya";
     document.querySelector('#category-modal .lang-tabs .lang-tab:nth-child(1)').click(); // reset to AZ
@@ -649,6 +670,8 @@ window.openCategoryModal = async function (id = null) {
         if (target) {
             document.getElementById('cat-v-id').value = target.id;
             document.getElementById('cat-v-sort_order').value = target.sort_order !== undefined ? target.sort_order : 0;
+            const activeBoxEdit = document.getElementById('cat-v-is_active');
+            if (activeBoxEdit) activeBoxEdit.checked = target.is_active !== false;
             document.getElementById('cat-v-name_az').value = target.name_az || '';
             document.getElementById('cat-v-name_en').value = target.name_en || '';
             document.getElementById('cat-v-name_ru').value = target.name_ru || '';
@@ -725,17 +748,24 @@ window.renderItems = async function () {
             const catInfo = allCategories.find(c => c.id === item.category_id);
             const catName = catInfo ? (catInfo.name_az || catInfo.id) : item.category_id;
 
+            const isActive = item.is_active !== false;
+            const opacityStyle = isActive ? '' : 'opacity:0.6; background-color:#f8f9fa;';
+            const statusBadge = isActive ? '' : '<span style="color:var(--danger); font-size:0.8rem; margin-left:10px;"><i class="fa-solid fa-eye-slash"></i> Passiv</span>';
+            const toggleIcon = isActive ? '<i class="fa-solid fa-eye-slash"></i>' : '<i class="fa-solid fa-eye"></i>';
+
             const div = document.createElement('div');
             div.className = 'data-item';
+            div.style.cssText = opacityStyle;
             div.innerHTML = `
                 <div class="data-info" style="display:flex; gap:15px; align-items:center;">
                     <img src="${item.image}" alt="${name}" style="width:50px; height:50px; object-fit:cover; border-radius:8px; border:1px solid var(--border);">
                     <div>
-                        <h4>${name} - <span style="color:var(--primary)">${item.price} AZN</span></h4>
+                        <h4>${name} - <span style="color:var(--primary)">${item.price} AZN</span> ${statusBadge}</h4>
                         <p><i class="fa-solid fa-list text-muted"></i> Kateqoriya: ${catName}</p>
                     </div>
                 </div>
                 <div class="data-actions">
+                    <button class="btn btn-outline" title="Aktiv/Passiv" onclick="toggleItemActive('${item.id}', ${!isActive})">${toggleIcon}</button>
                     <button class="btn btn-outline" onclick="openItemModal('${item.id}')"><i class="fa-solid fa-pen"></i></button>
                     <button class="btn btn-danger" onclick="deleteItem('${item.id}')"><i class="fa-solid fa-trash"></i></button>
                 </div>
@@ -745,6 +775,17 @@ window.renderItems = async function () {
 
     } catch (e) {
         list.innerHTML = "Xəta: " + e.message;
+    }
+}
+
+window.toggleItemActive = async function (id, makeActive) {
+    try {
+        const { error } = await supabaseClientLocal.from('items').update({ is_active: makeActive }).eq('id', id);
+        if (error) throw error;
+        renderItems();
+        showToast(makeActive ? "Məhsul aktiv edildi." : "Məhsul passiv (gizli) edildi.");
+    } catch (e) {
+        showToast("Status dəyişərkən xəta: " + e.message, "error");
     }
 }
 
@@ -796,6 +837,7 @@ document.getElementById('item-form').addEventListener('submit', async (e) => {
             calories: calories ? parseInt(calories) : null,
             prep_time: prepTime || null,
             is_kid_friendly: document.getElementById('item-v-is_kid_friendly').checked,
+            is_active: document.getElementById('item-v-is_active').checked,
             badges: document.getElementById('item-v-is_vegan') && document.getElementById('item-v-is_vegan').checked ? ['Vegan'] : []
         };
 
@@ -824,6 +866,8 @@ document.getElementById('item-form').addEventListener('submit', async (e) => {
 window.openItemModal = async function (id = null) {
     document.getElementById('item-form').reset();
     document.getElementById('item-v-id').value = '';
+    const activeBox = document.getElementById('item-v-is_active');
+    if (activeBox) activeBox.checked = true;
     document.getElementById('item-preview-img').style.display = 'none';
     document.getElementById('item-modal-title').innerText = "Yeni Məhsul";
     document.querySelector('#item-modal .lang-tabs .lang-tab:nth-child(1)').click();
@@ -859,6 +903,8 @@ window.openItemModal = async function (id = null) {
             document.getElementById('item-v-prep_time').value = data.prep_time || '';
             const kidBox = document.getElementById('item-v-is_kid_friendly');
             if (kidBox) kidBox.checked = !!data.is_kid_friendly;
+            const activeBoxEdit = document.getElementById('item-v-is_active');
+            if (activeBoxEdit) activeBoxEdit.checked = data.is_active !== false;
             const veganBox = document.getElementById('item-v-is_vegan');
             if (veganBox) veganBox.checked = data.badges && data.badges.includes('Vegan');
         }
