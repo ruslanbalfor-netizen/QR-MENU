@@ -1142,6 +1142,9 @@ function renderUsersList() {
         const place = window.cachedPlaces.find(p => p.id === record.place_id);
         const placeName = place ? escapeAdminHTML(place.name) : (record.place_id ? 'Naməlum Məkan' : '— (Bütün məkanlar)');
 
+        const isActive = record.is_active !== false;
+        const opacityStyle = isActive ? '' : 'opacity:0.6; background-color:#f8f9fa;';
+
         const roleIcon = record.role === 'super_admin'
             ? '<i class="fa-solid fa-shield-halved" style="color:#dc3545; margin-right:8px;"></i>'
             : '<i class="fa-solid fa-store" style="color:#007bff; margin-right:8px;"></i>';
@@ -1150,17 +1153,26 @@ function renderUsersList() {
             ? '<span style="background:#dc3545;color:white;padding:2px 8px;border-radius:12px;font-size:0.75rem;">Super Admin</span>'
             : '<span style="background:#007bff;color:white;padding:2px 8px;border-radius:12px;font-size:0.75rem;">Məkan Admini</span>';
 
+        const statusBadge = isActive
+            ? '<span style="background:#28a745;color:white;padding:2px 8px;border-radius:12px;font-size:0.75rem;margin-left:6px;">Aktiv</span>'
+            : '<span style="background:#6c757d;color:white;padding:2px 8px;border-radius:12px;font-size:0.75rem;margin-left:6px;">Passiv</span>';
+
+        const toggleIcon = isActive ? '<i class="fa-solid fa-eye-slash"></i>' : '<i class="fa-solid fa-eye"></i>';
+        const toggleTitle = isActive ? 'Passiv et' : 'Aktiv et';
+
         const item = document.createElement('div');
         item.className = 'data-item';
+        item.style.cssText = opacityStyle;
         item.innerHTML = `
             <div class="data-info">
-                <h4>${roleIcon} ${escapeAdminHTML(record.user_id.substring(0, 8))}... ${roleLabel}</h4>
+                <h4>${roleIcon} ${escapeAdminHTML(record.user_id.substring(0, 8))}... ${roleLabel} ${statusBadge}</h4>
                 <p><i class="fa-solid fa-store" style="margin-right:5px;"></i> Məkan: ${placeName}</p>
                 <p style="font-size:0.8rem; color:#adb5bd;">Yaradılıb: ${new Date(record.created_at).toLocaleDateString('az-AZ')}</p>
             </div>
             <div class="data-actions">
+                <button class="btn btn-outline" title="${toggleTitle}" onclick="toggleUserActive('${record.id}', ${!isActive})">${toggleIcon}</button>
                 <button class="btn btn-danger" onclick="deleteUserAssignment('${record.id}')">
-                    <i class="fa-solid fa-trash"></i> Sil
+                    <i class="fa-solid fa-trash"></i>
                 </button>
             </div>
         `;
@@ -1224,6 +1236,17 @@ if (userForm) {
             btn.disabled = false;
         }
     });
+}
+
+window.toggleUserActive = async function (id, makeActive) {
+    try {
+        const { error } = await supabaseClientLocal.from('place_admins').update({ is_active: makeActive }).eq('id', id);
+        if (error) throw error;
+        loadUsers();
+        showToast(makeActive ? "İstifadəçi aktiv edildi." : "İstifadəçi passiv edildi.");
+    } catch (e) {
+        showToast("Status dəyişərkən xəta: " + e.message, "error");
+    }
 }
 
 window.deleteUserAssignment = async function (id) {
