@@ -83,6 +83,17 @@ function showToast(message, type = 'success') {
     setTimeout(() => toast.remove(), 5000);
 }
 
+// Escape HTML to prevent XSS
+function escapeAdminHTML(str) {
+    if (!str) return '';
+    return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+}
+
 // ==== General Modal Logic ====
 function openModal(modalId) {
     document.getElementById(modalId).classList.add('active');
@@ -185,13 +196,16 @@ function renderPlacesList(data) {
         const isActive = activePlaceId === place.id;
         const activeBadge = isActive ? '<span style="background:var(--secondary);color:white;padding:2px 8px;border-radius:12px;font-size:0.7rem;">Aktiv</span>' : '';
 
+        const safeName = escapeAdminHTML(place.name);
+        const safeSlug = escapeAdminHTML(place.slug);
+
         item.innerHTML = `
             <div class="data-info">
-                <h4>${place.name} ${activeBadge}</h4>
-                <p>Link: /?place=${place.slug} • Valyuta: ${place.currency}</p>
+                <h4>${safeName} ${activeBadge}</h4>
+                <p>Link: /?place=${safeSlug} • Valyuta: ${escapeAdminHTML(place.currency)}</p>
             </div>
             <div class="data-actions">
-                <button class="btn btn-secondary" onclick="selectPlace('${place.id}', '${place.name}', '${place.slug}')"><i class="fa-solid fa-arrow-right"></i> İdarə Et</button>
+                <button class="btn btn-secondary" onclick="selectPlace('${place.id}', '${safeName}', '${safeSlug}')"><i class="fa-solid fa-arrow-right"></i> İdarə Et</button>
                 <button class="btn btn-outline" onclick="openPlaceModal('${place.id}')"><i class="fa-solid fa-pen"></i></button>
                 ${!isActive ? `<button class="btn btn-danger" onclick="deletePlace('${place.id}')"><i class="fa-solid fa-trash"></i></button>` : ''}
             </div>

@@ -12,6 +12,7 @@ CREATE TABLE IF NOT EXISTS public.places (
     facebook TEXT,
     google_url TEXT,
     theme_variant TEXT DEFAULT 'default',
+    service_charge INTEGER DEFAULT 0,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
 
@@ -22,8 +23,10 @@ CREATE TABLE IF NOT EXISTS public.categories (
     name_az TEXT NOT NULL,
     name_en TEXT,
     name_ru TEXT,
+    name_ar TEXT,
     image TEXT,
     sort_order INTEGER DEFAULT 0,
+    is_active BOOLEAN DEFAULT TRUE,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
 
@@ -34,14 +37,17 @@ CREATE TABLE IF NOT EXISTS public.items (
     name_az TEXT NOT NULL,
     name_en TEXT,
     name_ru TEXT,
+    name_ar TEXT,
     desc_az TEXT,
     desc_en TEXT,
     desc_ru TEXT,
+    desc_ar TEXT,
     price DECIMAL(10,2) NOT NULL DEFAULT 0,
     image TEXT,
     calories INTEGER,
     prep_time TEXT,
     is_kid_friendly BOOLEAN DEFAULT FALSE,
+    is_active BOOLEAN DEFAULT TRUE,
     badges TEXT[], -- Array of strings
     created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );

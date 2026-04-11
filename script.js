@@ -19,20 +19,21 @@ document.addEventListener('DOMContentLoaded', () => {
         document.body.classList.add('dark-mode');
     }
 
-    // Touch Sound Effect using Web Audio API
+    // Touch Sound Effect using Web Audio API (cached context)
+    let _audioCtx = null;
     function playTouchSound() {
         try {
-            const ctx = new (window.AudioContext || window.webkitAudioContext)();
-            const osc = ctx.createOscillator();
-            const gain = ctx.createGain();
+            if (!_audioCtx) _audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            const osc = _audioCtx.createOscillator();
+            const gain = _audioCtx.createGain();
             osc.connect(gain);
-            gain.connect(ctx.destination);
-            osc.frequency.value = 800; // Slightly lower pitch for a pleasant click
+            gain.connect(_audioCtx.destination);
+            osc.frequency.value = 800;
             osc.type = 'sine';
-            gain.gain.setValueAtTime(0.1, ctx.currentTime);
-            gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.05);
-            osc.start(ctx.currentTime);
-            osc.stop(ctx.currentTime + 0.05);
+            gain.gain.setValueAtTime(0.1, _audioCtx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.001, _audioCtx.currentTime + 0.05);
+            osc.start(_audioCtx.currentTime);
+            osc.stop(_audioCtx.currentTime + 0.05);
         } catch (e) { /* ignore if audio blocked */ }
     }
 
@@ -518,13 +519,13 @@ document.addEventListener('DOMContentLoaded', () => {
                 <div class="item-content">
                     <div class="item-header">
                         <h3 class="item-title">${itemName}</h3>
-                        <span class="item-price">${Number(item.price).toFixed(2)} AZN</span>
+                        <span class="item-price">${Number(item.price).toFixed(2)} ${appData.branding.currency || 'AZN'}</span>
                     </div>
                     <p class="item-description">${itemDesc}</p>
                     ${metaHtml}
                     ${badgesHtml}
                     <button class="add-to-cart-btn" data-id="${escapeHTML(item.id)}">
-                        <i class="fa-solid fa-plus"></i> ${currentLang === 'az' ? 'Səbətə at' : currentLang === 'ru' ? 'В корзину' : 'Add to cart'}
+                        <i class="fa-solid fa-plus"></i> ${{az:'Səbətə at', en:'Add to cart', ru:'В корзину', ar:'أضف إلى السلة'}[currentLang] || 'Səbətə at'}
                     </button>
                 </div>
             `;
@@ -1176,16 +1177,23 @@ document.addEventListener('DOMContentLoaded', () => {
     // Create No Results Element
     let noResultsEl = document.querySelector('.no-results-msg');
 
+    const noResultsText = {
+        az: { title: 'Nəticə tapılmadı', desc: 'Axtarışınıza uyğun heç bir məhsul yoxdur.' },
+        en: { title: 'No results found', desc: 'No items match your search.' },
+        ru: { title: 'Ничего не найдено', desc: 'Нет товаров, соответствующих вашему запросу.' },
+        ar: { title: 'لم يتم العثور على نتائج', desc: 'لا توجد منتجات تطابق بحثك.' }
+    };
     if (!noResultsEl) {
         noResultsEl = document.createElement('div');
         noResultsEl.className = 'no-results-msg';
-        noResultsEl.innerHTML = `
-            <i class="fa-solid fa-utensils"></i>
-            <h3>Nəticə tapılmadı</h3>
-            <p>Axtarışınıza uyğun heç bir məhsul yoxdur.</p>
-        `;
         menuContainer.appendChild(noResultsEl);
     }
+    const nrLang = noResultsText[currentLang] || noResultsText.az;
+    noResultsEl.innerHTML = `
+        <i class="fa-solid fa-utensils"></i>
+        <h3>${nrLang.title}</h3>
+        <p>${nrLang.desc}</p>
+    `;
 
     function handleSearch() {
         if (!searchInput) return;
@@ -1255,6 +1263,13 @@ document.addEventListener('DOMContentLoaded', () => {
     const originalReRenderApp = reRenderApp;
     reRenderApp = function () {
         originalReRenderApp();
+        // Update no-results text for current language
+        const nrL = noResultsText[currentLang] || noResultsText.az;
+        noResultsEl.innerHTML = `
+            <i class="fa-solid fa-utensils"></i>
+            <h3>${nrL.title}</h3>
+            <p>${nrL.desc}</p>
+        `;
         // Re-append no results element because renderMenu clears menuContainer
         noResultsEl.style.display = 'none';
         menuContainer.appendChild(noResultsEl);
