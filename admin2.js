@@ -535,7 +535,7 @@ async function fetchCategories() {
     itemCatSelect.innerHTML = '<option value="">-- Kateqoriya Seçin --</option>';
 
     data.forEach(c => {
-        const name = c.name_az || c.name_en || c.name_ru || c.id;
+        const name = c.name_az || c.name_en || c.name_ru || c.name_ar || c.id;
         filterSelect.innerHTML += `<option value="${c.id}">${name}</option>`;
         itemCatSelect.innerHTML += `<option value="${c.id}">${name}</option>`;
     });
@@ -555,7 +555,7 @@ async function renderCategories() {
         }
 
         categories.forEach(cat => {
-            const name = cat.name_az || cat.name_en || cat.name_ru || cat.id;
+            const name = cat.name_az || cat.name_en || cat.name_ru || cat.name_ar || cat.id;
             const imgHtml = cat.image ? `<img src="${cat.image}" style="width:40px;height:40px;border-radius:50%;object-fit:cover;border:1px solid #ddd;">` : `<div style="width:40px;height:40px;border-radius:50%;background:#eee;display:flex;align-items:center;justify-content:center;"><i class="fa-solid fa-image text-muted"></i></div>`;
 
             const isActive = cat.is_active !== false;
@@ -612,6 +612,7 @@ document.getElementById('category-form').addEventListener('submit', async (e) =>
         const nameAz = document.getElementById('cat-v-name_az').value;
         const nameEn = document.getElementById('cat-v-name_en').value || null;
         const nameRu = document.getElementById('cat-v-name_ru').value || null;
+        const nameAr = document.getElementById('cat-v-name_ar').value || null;
 
         // Auto-generate ID from AZ name if creating new
         if (!id) {
@@ -634,6 +635,7 @@ document.getElementById('category-form').addEventListener('submit', async (e) =>
             name_az: nameAz,
             name_en: nameEn,
             name_ru: nameRu,
+            name_ar: nameAr,
             image: image || null,
             sort_order: parseInt(document.getElementById('cat-v-sort_order').value) || 0,
             is_active: document.getElementById('cat-v-is_active').checked
@@ -675,6 +677,7 @@ window.openCategoryModal = async function (id = null) {
             document.getElementById('cat-v-name_az').value = target.name_az || '';
             document.getElementById('cat-v-name_en').value = target.name_en || '';
             document.getElementById('cat-v-name_ru').value = target.name_ru || '';
+            document.getElementById('cat-v-name_ar').value = target.name_ar || '';
             document.getElementById('cat-v-image').value = target.image || '';
             document.getElementById('cat-v-image-file').value = '';
 
@@ -744,7 +747,7 @@ window.renderItems = async function () {
         }
 
         data.forEach(item => {
-            const name = item.name_az || item.name_en || item.name_ru || "Adsız";
+            const name = item.name_az || item.name_en || item.name_ru || item.name_ar || "Adsız";
             const catInfo = allCategories.find(c => c.id === item.category_id);
             const catName = catInfo ? (catInfo.name_az || catInfo.id) : item.category_id;
 
@@ -805,10 +808,12 @@ document.getElementById('item-form').addEventListener('submit', async (e) => {
         const nameAz = document.getElementById('item-v-name_az').value;
         const nameEn = document.getElementById('item-v-name_en').value;
         const nameRu = document.getElementById('item-v-name_ru').value;
+        const nameAr = document.getElementById('item-v-name_ar').value;
 
         const descAz = document.getElementById('item-v-desc_az').value;
         const descEn = document.getElementById('item-v-desc_en').value;
         const descRu = document.getElementById('item-v-desc_ru').value;
+        const descAr = document.getElementById('item-v-desc_ar').value;
 
         const priceStr = document.getElementById('item-v-price').value;
         const price = parseFloat(priceStr.replace(',', '.'));
@@ -829,9 +834,11 @@ document.getElementById('item-form').addEventListener('submit', async (e) => {
             name_az: nameAz,
             name_en: nameEn || null,
             name_ru: nameRu || null,
+            name_ar: nameAr || null,
             desc_az: descAz,
             desc_en: descEn || null,
             desc_ru: descRu || null,
+            desc_ar: descAr || null,
             price: price,
             image: image || null,
             calories: calories ? parseInt(calories) : null,
@@ -885,10 +892,12 @@ window.openItemModal = async function (id = null) {
             document.getElementById('item-v-name_az').value = data.name_az || '';
             document.getElementById('item-v-name_en').value = data.name_en || '';
             document.getElementById('item-v-name_ru').value = data.name_ru || '';
+            document.getElementById('item-v-name_ar').value = data.name_ar || '';
 
             document.getElementById('item-v-desc_az').value = data.desc_az || '';
             document.getElementById('item-v-desc_en').value = data.desc_en || '';
             document.getElementById('item-v-desc_ru').value = data.desc_ru || '';
+            document.getElementById('item-v-desc_ar').value = data.desc_ar || '';
 
             document.getElementById('item-v-price').value = data.price;
             document.getElementById('item-v-image').value = data.image || '';

@@ -163,13 +163,15 @@ document.addEventListener('DOMContentLoaded', () => {
     const langFlags = {
         az: 'assets/icons/az.png?v=3.0',
         en: 'assets/icons/en.png?v=3.0',
-        ru: 'assets/icons/ru.png?v=3.0'
+        ru: 'assets/icons/ru.png?v=3.0',
+        ar: 'assets/icons/ar.png?v=3.0'
     };
     const translations = {
         kidFriendly: {
             az: 'Kids Approved',
             en: 'Kids Approved',
-            ru: 'Kids Approved'
+            ru: 'Kids Approved',
+            ar: 'Kids Approved'
         }
     };
 
@@ -342,7 +344,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             appData.categories = (catsData || []).map(c => ({
                 id: c.id,
-                name: { az: c.name_az, en: c.name_en, ru: c.name_ru },
+                name: { az: c.name_az, en: c.name_en, ru: c.name_ru, ar: c.name_ar },
                 image: c.image,
                 sortOrder: parseInt(c.sort_order) || 0
             })).sort((a, b) => a.sortOrder - b.sortOrder);
@@ -350,8 +352,8 @@ document.addEventListener('DOMContentLoaded', () => {
             appData.items = (itemsData || []).map(i => ({
                 id: i.id,
                 categoryId: i.category_id,
-                name: { az: i.name_az, en: i.name_en, ru: i.name_ru },
-                description: { az: i.desc_az, en: i.desc_en, ru: i.desc_ru },
+                name: { az: i.name_az, en: i.name_en, ru: i.name_ru, ar: i.name_ar },
+                description: { az: i.desc_az, en: i.desc_en, ru: i.desc_ru, ar: i.desc_ar },
                 price: i.price,
                 image: i.image,
                 calories: i.calories,
@@ -1000,10 +1002,10 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function formatWhatsAppMessage() {
-        const greetings = { az: "Salam! Mən sifariş vermək istəyirəm:\n\n", en: "Hello! I would like to order:\n\n", ru: "Здравствуйте! Я хочу заказать:\n\n" };
-        const subText = { az: "\nMəbləğ:", en: "\nSubtotal:", ru: "\nСумма:" };
-        const srvText = { az: "Xidmət Haqqı", en: "Service Charge", ru: "Обслуживание" };
-        const totalText = { az: "\n*Yekun Məbləğ:", en: "\n*Total Amount:", ru: "\n*Итоговая сумма:" };
+        const greetings = { az: "Salam! Mən sifariş vermək istəyirəm:\n\n", en: "Hello! I would like to order:\n\n", ru: "Здравствуйте! Я хочу заказать:\n\n", ar: "مرحبًا! أود أن أطلب:\n\n" };
+        const subText = { az: "\nMəbləğ:", en: "\nSubtotal:", ru: "\nСумма:", ar: "\nالمجموع الفرعي:" };
+        const srvText = { az: "Xidmət Haqqı", en: "Service Charge", ru: "Обслуживание", ar: "رسوم الخدمة" };
+        const totalText = { az: "\n*Yekun Məbləğ:", en: "\n*Total Amount:", ru: "\n*Итоговая сумма:", ar: "\n*المبلغ الإجمالي:" };
 
         let msg = greetings[currentLang] || greetings.az;
         let total = 0;
@@ -1068,6 +1070,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // 2. Set initial UI state based on saved language
     const currentLangFlag = document.getElementById('current-lang-flag');
     function updateLangUI(lang) {
+        document.dir = lang === 'ar' ? 'rtl' : 'ltr';
         currentLangText.textContent = lang.toUpperCase();
         if (currentLangFlag) {
             currentLangFlag.src = langFlags[lang] || langFlags.az;
@@ -1129,18 +1132,20 @@ document.addEventListener('DOMContentLoaded', () => {
         if (cartModal.classList.contains('active')) renderCartModal();
 
         const translations = {
-            cartItemsText: { az: "Məhsul", en: "Items", ru: "Товаров" },
-            cartTitle: { az: "Səbətiniz", en: "Your Cart", ru: "Ваша корзина" },
-            totalRow: { az: "Cəmi:", en: "Total:", ru: "Итого:" },
+            cartItemsText: { az: "Məhsul", en: "Items", ru: "Товаров", ar: "المنتجات" },
+            cartTitle: { az: "Səbətiniz", en: "Your Cart", ru: "Ваша корзина", ar: "عربة التسوق" },
+            totalRow: { az: "Cəmi:", en: "Total:", ru: "Итого:", ar: "المجموع:" },
             waLabel: {
                 az: "Sizin WhatsApp nömrəniz (Nümunə: 994501234567):",
                 en: "Your WhatsApp Number (e.g. 994...):",
-                ru: "Ваш номер WhatsApp (например: 994...):"
+                ru: "Ваш номер WhatsApp (например: 994...):",
+                ar: "رقم الواتساب الخاص بك (مثال: 994...):"
             },
             checkoutBtn: {
                 az: "<i class='fa-brands fa-whatsapp'></i> Sifariş Çekini Göndər",
                 en: "<i class='fa-brands fa-whatsapp'></i> Send Order Receipt",
-                ru: "<i class='fa-brands fa-whatsapp'></i> Отправить чек заказа"
+                ru: "<i class='fa-brands fa-whatsapp'></i> Отправить чек заказа",
+                ar: "<i class='fa-brands fa-whatsapp'></i> إرسال إيصال الطلب"
             }
         };
 
@@ -1167,6 +1172,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Create No Results Element
     let noResultsEl = document.querySelector('.no-results-msg');
+    
+    // Static translations for UI parts not covered in reRenderApp yet
+    const searchPlaceholder = { az: "Yemək, içki və ya kateqoriya axtar...", en: "Search food, drinks or categories...", ru: "Поиск еды, напитков или категорий...", ar: "ابحث عن الطعام والمشروبات أو الفئات..." };
+    if (searchInput) searchInput.placeholder = searchPlaceholder[currentLang] || searchPlaceholder.az;
+
     if (!noResultsEl) {
         noResultsEl = document.createElement('div');
         noResultsEl.className = 'no-results-msg';
