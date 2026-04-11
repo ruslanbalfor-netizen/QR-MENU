@@ -207,7 +207,7 @@ function renderPlacesList(data) {
                 <p>Link: /?place=${safeSlug} • Valyuta: ${escapeAdminHTML(place.currency)}</p>
             </div>
             <div class="data-actions">
-                <button class="btn btn-secondary" onclick="selectPlace('${place.id}', '${safeName}', '${safeSlug}')"><i class="fa-solid fa-arrow-right"></i> İdarə Et</button>
+                <button class="btn btn-secondary" onclick="window._userClickedManage=true; selectPlace('${place.id}', '${safeName}', '${safeSlug}')"><i class="fa-solid fa-arrow-right"></i> İdarə Et</button>
                 <button class="btn btn-outline" onclick="openPlaceModal('${place.id}')"><i class="fa-solid fa-pen"></i></button>
                 ${!isActive ? `<button class="btn btn-danger" onclick="deletePlace('${place.id}')"><i class="fa-solid fa-trash"></i></button>` : ''}
             </div>
@@ -276,10 +276,14 @@ function selectPlace(id, name, slug) {
     // Reload places to show active badge in list
     renderPlacesList(window.cachedPlaces);
 
-    // Switch to menu view automatically if we were in places view
-    const activeNav = document.querySelector('.sidebar .nav-item.active');
-    if (activeNav && activeNav.dataset.view === 'places-view') {
-        document.getElementById('nav-menu').click();
+    // Switch to menu view automatically ONLY if user explicitly clicked "İdarə Et"
+    // Don't auto-switch on page load
+    if (window._userClickedManage) {
+        const activeNav = document.querySelector('.sidebar .nav-item.active');
+        if (activeNav && activeNav.dataset.view === 'places-view') {
+            document.getElementById('nav-menu').click();
+        }
+        window._userClickedManage = false;
     }
 }
 window.selectPlace = selectPlace;
