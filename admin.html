@@ -98,6 +98,42 @@
         .user-tab { background: #f8f9fa; color: #6c757d; transition: 0.2s; }
         .user-tab.active { background: white; color: #212529; font-weight: 700; border-bottom-color: white !important; }
         .user-tab:hover:not(.active) { background: #e9ecef; }
+
+        /* iPhone-style Toggle Switch */
+        .toggle-switch {
+            position: relative;
+            width: 48px;
+            height: 28px;
+            cursor: pointer;
+            display: inline-block;
+            flex-shrink: 0;
+        }
+        .toggle-switch input { display: none; }
+        .toggle-switch .slider {
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: #ccc;
+            border-radius: 28px;
+            transition: 0.3s;
+        }
+        .toggle-switch .slider:before {
+            content: "";
+            position: absolute;
+            width: 22px;
+            height: 22px;
+            left: 3px;
+            bottom: 3px;
+            background: white;
+            border-radius: 50%;
+            transition: 0.3s;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.3);
+        }
+        .toggle-switch input:checked + .slider {
+            background: #34c759;
+        }
+        .toggle-switch input:checked + .slider:before {
+            transform: translateX(20px);
+        }
     </style>
 </head>
 <body>

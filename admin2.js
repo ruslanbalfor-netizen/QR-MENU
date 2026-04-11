@@ -1157,20 +1157,22 @@ function renderUsersList() {
             ? '<span style="background:#28a745;color:white;padding:2px 8px;border-radius:12px;font-size:0.75rem;margin-left:6px;">Aktiv</span>'
             : '<span style="background:#6c757d;color:white;padding:2px 8px;border-radius:12px;font-size:0.75rem;margin-left:6px;">Passiv</span>';
 
-        const toggleIcon = isActive ? '<i class="fa-solid fa-eye-slash"></i>' : '<i class="fa-solid fa-eye"></i>';
-        const toggleTitle = isActive ? 'Passiv et' : 'Aktiv et';
+        const toggleChecked = isActive ? 'checked' : '';
 
         const item = document.createElement('div');
         item.className = 'data-item';
         item.style.cssText = opacityStyle;
         item.innerHTML = `
-            <div class="data-info">
+            <div class="data-info" style="flex:1;">
                 <h4>${roleIcon} ${escapeAdminHTML(record.user_id.substring(0, 8))}... ${roleLabel} ${statusBadge}</h4>
                 <p><i class="fa-solid fa-store" style="margin-right:5px;"></i> Məkan: ${placeName}</p>
                 <p style="font-size:0.8rem; color:#adb5bd;">Yaradılıb: ${new Date(record.created_at).toLocaleDateString('az-AZ')}</p>
             </div>
-            <div class="data-actions">
-                <button class="btn btn-outline" title="${toggleTitle}" onclick="toggleUserActive('${record.id}', ${!isActive})">${toggleIcon}</button>
+            <div class="data-actions" style="align-items:center;">
+                <label class="toggle-switch" title="${isActive ? 'Passiv et' : 'Aktiv et'}">
+                    <input type="checkbox" ${toggleChecked} onchange="toggleUserActive('${record.id}', this.checked)">
+                    <span class="slider"></span>
+                </label>
                 <button class="btn btn-danger" onclick="deleteUserAssignment('${record.id}')">
                     <i class="fa-solid fa-trash"></i>
                 </button>
