@@ -134,6 +134,17 @@
         .toggle-switch input:checked + .slider:before {
             transform: translateX(20px);
         }
+
+        /* Custom Theme Select */
+        .theme-select-wrapper { position: relative; width: 100%; user-select: none; }
+        .theme-select-trigger { padding: 10px; border: 1px solid #ced4da; border-radius: 6px; display: flex; align-items: center; justify-content: space-between; cursor: pointer; background: white; transition: 0.2s; font-size:1rem; }
+        .theme-select-trigger:hover { border-color: #80bdff; }
+        .theme-select-options { position: absolute; display: none; top: 100%; left: 0; right: 0; background: white; border: 1px solid #ced4da; border-radius: 6px; margin-top: 5px; z-index: 100; max-height: 250px; overflow-y: auto; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+        .theme-select-wrapper.open .theme-select-options { display: block; }
+        .theme-option { padding: 10px 15px; display: flex; align-items: center; gap: 12px; cursor: pointer; transition: 0.2s; border-bottom: 1px solid #f8f9fa; }
+        .theme-option:last-child { border-bottom: none; }
+        .theme-option:hover { background: #f8f9fa; }
+        .color-circle { width: 22px; height: 22px; border-radius: 50%; border: 1px solid rgba(0,0,0,0.15); box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
     </style>
 </head>
 <body>
@@ -348,18 +359,19 @@
                 <h4 style="margin:20px 0 10px; border-bottom:1px solid #eee; padding-bottom:5px;">Dizayn (Şəkillər & Mövzu)</h4>
                 <div class="form-group">
                     <label>Brend Rəngi / Mövzu</label>
-                    <select id="place-v-theme" class="form-control">
-                        <option value="default">🔵 Default Blue (Standart Mavi)</option>
-                        <option value="rum-chocolate">🟤 Rum Chocolate (Tünd Qırmızı/Şokolad)</option>
-                        <option value="yoghurt">⚪ Yoghurt (Krem/Bej)</option>
-                        <option value="vivid-orange">🟠 Vivid Orange (Parlaq Narıncı)</option>
-                        <option value="oceanic-noir">🌑 Oceanic Noir (Tünd Okean Mavisi)</option>
-                        <option value="seafoam">🟢 Seafoam (Dəniz Köpüyü/Yaşıl)</option>
-                        <option value="citrus-orange">🍊 Citrus Orange (Sitrus Narıncı)</option>
-                        <option value="lime-green">🔋 Lime Green (Laym Yaşılı)</option>
-                        <option value="lemon-yellow">🟡 Lemon Yellow (Limon Sarısı)</option>
-                        <option value="ruby-red">🔴 Ruby Red (Rubin Qırmızısı)</option>
+                    <select id="place-v-theme" class="form-control" style="display:none;">
+                        <option value="default" data-color="#007bff">Default Blue (Standart Mavi)</option>
+                        <option value="rum-chocolate" data-color="#4e3629">Rum Chocolate (Tünd Qırmızı/Şokolad)</option>
+                        <option value="yoghurt" data-color="#fdfcfb">Yoghurt (Krem/Bej)</option>
+                        <option value="vivid-orange" data-color="#ff6b00">Vivid Orange (Parlaq Narıncı)</option>
+                        <option value="oceanic-noir" data-color="#0f172a">Oceanic Noir (Tünd Okean Mavisi)</option>
+                        <option value="seafoam" data-color="#e2fcf5">Seafoam (Dəniz Köpüyü/Yaşıl)</option>
+                        <option value="citrus-orange" data-color="#ff8c42">Citrus Orange (Sitrus Narıncı)</option>
+                        <option value="lime-green" data-color="#9dcd5a">Lime Green (Laym Yaşılı)</option>
+                        <option value="lemon-yellow" data-color="#fceb5d">Lemon Yellow (Limon Sarısı)</option>
+                        <option value="ruby-red" data-color="#e63946">Ruby Red (Rubin Qırmızısı)</option>
                     </select>
+                    <div id="theme-custom-dropdown"></div>
                 </div>
                 <div class="form-group">
                     <label>Loqo Şəkli</label>
@@ -583,6 +595,66 @@
 
     <!-- Toast Container -->
     <div id="toast-container"></div>
+
+    <script>
+        // Custom Theme Dropdown Logic
+        document.addEventListener('DOMContentLoaded', () => {
+            const selectEl = document.getElementById('place-v-theme');
+            const customDiv = document.getElementById('theme-custom-dropdown');
+            if(!selectEl || !customDiv) return;
+
+            let html = `<div class="theme-select-wrapper" id="theme-select-wrapper">
+                <div class="theme-select-trigger" id="theme-select-trigger">
+                    <span id="theme-select-selected-text" style="display:flex; align-items:center; gap:10px;">Seçin...</span>
+                    <i class="fa-solid fa-chevron-down"></i>
+                </div>
+                <div class="theme-select-options">`;
+
+            Array.from(selectEl.options).forEach(opt => {
+                const color = opt.getAttribute('data-color') || '#cccccc';
+                html += `<div class="theme-option" onclick="selectThemeOption('${opt.value}')">
+                    <div class="color-circle" style="background-color: ${color};"></div>
+                    <span>${opt.text}</span>
+                </div>`;
+            });
+
+            html += `</div></div>`;
+            customDiv.innerHTML = html;
+
+            document.getElementById('theme-select-trigger').addEventListener('click', () => {
+                document.getElementById('theme-select-wrapper').classList.toggle('open');
+            });
+
+            document.addEventListener('click', (e) => {
+                const wrapper = document.getElementById('theme-select-wrapper');
+                if(wrapper && !wrapper.contains(e.target)) {
+                    wrapper.classList.remove('open');
+                }
+            });
+
+            window.syncCustomThemeDropdown = function() {
+                const val = selectEl.value || 'default';
+                const opt = selectEl.querySelector(`option[value="${val}"]`);
+                if(opt) {
+                    const color = opt.getAttribute('data-color') || '#cccccc';
+                    document.getElementById('theme-select-selected-text').innerHTML = `
+                        <div class="color-circle" style="background-color: ${color};"></div>
+                        <span>${opt.text}</span>
+                    `;
+                }
+            };
+
+            window.selectThemeOption = function(val) {
+                selectEl.value = val;
+                // Dispatch change event to trigger saving immediately (for client-admin) or to notify others
+                selectEl.dispatchEvent(new Event('change'));
+                syncCustomThemeDropdown();
+                document.getElementById('theme-select-wrapper').classList.remove('open');
+            };
+
+            setTimeout(syncCustomThemeDropdown, 100);
+        });
+    </script>
 
     <!-- Scripts -->
     <!-- Supabase SDK before local scripts -->

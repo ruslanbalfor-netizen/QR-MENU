@@ -125,6 +125,7 @@ function populatePlaceForm(data) {
     document.getElementById('place-v-facebook').value = data.facebook || '';
     document.getElementById('place-v-google').value = data.google_url || '';
     document.getElementById('place-v-theme').value = data.theme_variant || 'default';
+    if(window.syncCustomThemeDropdown) window.syncCustomThemeDropdown();
     document.getElementById('place-v-logo').value = data.logo || '';
     document.getElementById('place-v-cover').value = data.cover || '';
 
