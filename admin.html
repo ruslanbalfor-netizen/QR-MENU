@@ -93,6 +93,11 @@
         .toast-error { border-left: 4px solid #dc3545; }
         @keyframes slideIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
         @keyframes fadeOut { from { opacity: 1; } to { opacity: 0; } }
+
+        /* User Tabs */
+        .user-tab { background: #f8f9fa; color: #6c757d; transition: 0.2s; }
+        .user-tab.active { background: white; color: #212529; font-weight: 700; border-bottom-color: white !important; }
+        .user-tab:hover:not(.active) { background: #e9ecef; }
     </style>
 </head>
 <body>
@@ -215,7 +220,7 @@
         <!-- USERS VIEW -->
         <div id="users-view" class="view-section hidden">
             <div class="section-header">
-                <h2>Məkan Adminləri (Müştəri Hesabları)</h2>
+                <h2>İstifadəçi İdarəetmə</h2>
                 <button class="btn btn-success" onclick="openUserModal()"><i class="fa-solid fa-plus"></i> Yeni Əlaqə</button>
             </div>
             <div class="text-muted" style="margin-bottom:15px;">
@@ -226,6 +231,19 @@
                     <li>Müştəri <code>login.html</code> səhifəsindən giriş edəndə avtomatik olaraq öz məkanının panelinə yönləndirilir</li>
                 </ol>
             </div>
+
+            <!-- User Type Tabs -->
+            <div style="display:flex; gap:0; margin-bottom:20px; border-bottom:2px solid #dee2e6;">
+                <button class="btn user-tab active" id="tab-super-admins" onclick="switchUserTab('super_admin')" style="border-radius:8px 8px 0 0; border:1px solid #dee2e6; border-bottom:none; padding:12px 25px; font-size:0.95rem; margin-bottom:-2px;">
+                    <i class="fa-solid fa-shield-halved" style="color:#dc3545;"></i> Super Adminlər
+                    <span id="count-super-admins" style="background:#dc3545; color:white; padding:1px 8px; border-radius:10px; font-size:0.75rem; margin-left:6px;">0</span>
+                </button>
+                <button class="btn user-tab" id="tab-place-admins" onclick="switchUserTab('place_admin')" style="border-radius:8px 8px 0 0; border:1px solid #dee2e6; border-bottom:none; padding:12px 25px; font-size:0.95rem; margin-bottom:-2px;">
+                    <i class="fa-solid fa-store" style="color:#007bff;"></i> Məkan Adminləri
+                    <span id="count-place-admins" style="background:#007bff; color:white; padding:1px 8px; border-radius:10px; font-size:0.75rem; margin-left:6px;">0</span>
+                </button>
+            </div>
+
             <div id="users-list">
                 <!-- Users injected here -->
             </div>

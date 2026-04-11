@@ -1081,6 +1081,7 @@ window.uploadAdminLogo = async function (input) {
 // ================= USERS / PLACE ADMINS =================
 
 let cachedUserAssignments = [];
+let activeUserTab = 'super_admin';
 
 async function loadUsers() {
     try {
@@ -1091,7 +1092,16 @@ async function loadUsers() {
 
         if (error) throw error;
         cachedUserAssignments = data || [];
-        renderUsersList(data || []);
+
+        // Update counts
+        const superCount = cachedUserAssignments.filter(u => u.role === 'super_admin').length;
+        const placeCount = cachedUserAssignments.filter(u => u.role === 'place_admin').length;
+        const superCountEl = document.getElementById('count-super-admins');
+        const placeCountEl = document.getElementById('count-place-admins');
+        if (superCountEl) superCountEl.textContent = superCount;
+        if (placeCountEl) placeCountEl.textContent = placeCount;
+
+        renderUsersList();
     } catch (e) {
         console.error('Load Users Error:', e);
         const list = document.getElementById('users-list');
@@ -1103,19 +1113,39 @@ async function loadUsers() {
     }
 }
 
-function renderUsersList(data) {
+window.switchUserTab = function (tab) {
+    activeUserTab = tab;
+
+    // Update tab styles
+    document.getElementById('tab-super-admins').classList.toggle('active', tab === 'super_admin');
+    document.getElementById('tab-place-admins').classList.toggle('active', tab === 'place_admin');
+
+    renderUsersList();
+}
+
+function renderUsersList() {
     const list = document.getElementById('users-list');
     if (!list) return;
     list.innerHTML = '';
 
-    if (data.length === 0) {
-        list.innerHTML = '<div style="text-align:center; padding:20px; color:#6c757d;">Heç bir istifadəçi-məkan əlaqəsi yoxdur.</div>';
+    const filtered = cachedUserAssignments.filter(u => u.role === activeUserTab);
+
+    if (filtered.length === 0) {
+        const emptyMsg = activeUserTab === 'super_admin'
+            ? 'Heç bir super admin qeydə alınmayıb.'
+            : 'Heç bir məkan admini (müştəri) qeydə alınmayıb.';
+        list.innerHTML = `<div style="text-align:center; padding:30px; color:#6c757d;"><i class="fa-solid fa-users-slash" style="font-size:2rem; margin-bottom:10px; display:block; opacity:0.4;"></i>${emptyMsg}</div>`;
         return;
     }
 
-    data.forEach(record => {
+    filtered.forEach(record => {
         const place = window.cachedPlaces.find(p => p.id === record.place_id);
         const placeName = place ? escapeAdminHTML(place.name) : (record.place_id ? 'Naməlum Məkan' : '— (Bütün məkanlar)');
+
+        const roleIcon = record.role === 'super_admin'
+            ? '<i class="fa-solid fa-shield-halved" style="color:#dc3545; margin-right:8px;"></i>'
+            : '<i class="fa-solid fa-store" style="color:#007bff; margin-right:8px;"></i>';
+
         const roleLabel = record.role === 'super_admin'
             ? '<span style="background:#dc3545;color:white;padding:2px 8px;border-radius:12px;font-size:0.75rem;">Super Admin</span>'
             : '<span style="background:#007bff;color:white;padding:2px 8px;border-radius:12px;font-size:0.75rem;">Məkan Admini</span>';
@@ -1124,7 +1154,7 @@ function renderUsersList(data) {
         item.className = 'data-item';
         item.innerHTML = `
             <div class="data-info">
-                <h4><i class="fa-solid fa-user" style="margin-right:8px; color:#6c757d;"></i> ${escapeAdminHTML(record.user_id.substring(0, 8))}... ${roleLabel}</h4>
+                <h4>${roleIcon} ${escapeAdminHTML(record.user_id.substring(0, 8))}... ${roleLabel}</h4>
                 <p><i class="fa-solid fa-store" style="margin-right:5px;"></i> Məkan: ${placeName}</p>
                 <p style="font-size:0.8rem; color:#adb5bd;">Yaradılıb: ${new Date(record.created_at).toLocaleDateString('az-AZ')}</p>
             </div>
