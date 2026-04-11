@@ -1070,7 +1070,6 @@ document.addEventListener('DOMContentLoaded', () => {
     // 2. Set initial UI state based on saved language
     const currentLangFlag = document.getElementById('current-lang-flag');
     function updateLangUI(lang) {
-        document.dir = lang === 'ar' ? 'rtl' : 'ltr';
         currentLangText.textContent = lang.toUpperCase();
         if (currentLangFlag) {
             currentLangFlag.src = langFlags[lang] || langFlags.az;

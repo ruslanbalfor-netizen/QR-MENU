@@ -100,7 +100,7 @@ function switchTab(prefix, lang, e) {
     const target = e ? e.target : (window.event ? window.event.target : null);
     if (target) target.classList.add('active');
 
-    const fields = ['az', 'en', 'ru'];
+    const fields = ['az', 'en', 'ru', 'ar'];
     fields.forEach(f => {
         const nameInput = document.getElementById(`${prefix}-v-name_${f}`);
         const descInput = document.getElementById(`${prefix}-v-desc_${f}`);
