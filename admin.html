@@ -99,8 +99,14 @@
 
     <!-- Sidebar -->
     <div class="sidebar">
-        <div class="brand">
-            <img src="assets/ruis-logo.png?v=1.1" style="height:40px; vertical-align:middle; margin-right:8px; border-radius:8px;">
+        <div class="brand" style="display:flex; flex-direction:column; align-items:center; gap:10px;">
+            <div style="position:relative; cursor:pointer;" onclick="document.getElementById('admin-logo-upload').click();" title="Loqonu dəyişmək üçün klikləyin">
+                <img src="assets/ruis-logo.png?v=1.1" id="admin-sidebar-logo" style="height:80px; width:80px; border-radius:15px; object-fit:cover; border:2px solid rgba(255,255,255,0.15); transition:0.3s;">
+                <div style="position:absolute; bottom:0; right:0; background:#007bff; width:24px; height:24px; border-radius:50%; display:flex; align-items:center; justify-content:center; border:2px solid #212529;">
+                    <i class="fa-solid fa-camera" style="font-size:10px; color:white;"></i>
+                </div>
+            </div>
+            <input type="file" id="admin-logo-upload" accept="image/*" style="display:none;" onchange="uploadAdminLogo(this)">
             RUIS Admin
         </div>
         

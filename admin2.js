@@ -47,6 +47,13 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     loadPlaces();
 
+    // Restore saved admin logo
+    const savedAdminLogo = localStorage.getItem('admin_panel_logo');
+    if (savedAdminLogo) {
+        const logoEl = document.getElementById('admin-sidebar-logo');
+        if (logoEl) logoEl.src = savedAdminLogo;
+    }
+
     // Quick Switcher Event
     const quickSelector = document.getElementById('quick-place-selector');
     if (quickSelector) {
@@ -1048,6 +1055,26 @@ window.logout = async function() {
         if (error) alert("Çıxış xətası: " + error.message);
         window.location.href = 'login.html';
     }
+}
+
+
+// ================= ADMIN PANEL LOGO =================
+
+window.uploadAdminLogo = async function (input) {
+    if (!input.files || !input.files[0]) return;
+    try {
+        showToast("Loqo yüklənir...");
+        const logoUrl = await uploadImage(input.files[0], 'logos');
+        if (logoUrl) {
+            localStorage.setItem('admin_panel_logo', logoUrl);
+            const logoEl = document.getElementById('admin-sidebar-logo');
+            if (logoEl) logoEl.src = logoUrl;
+            showToast("Admin panel loqosu uğurla dəyişdirildi!");
+        }
+    } catch (e) {
+        showToast("Loqo yüklənərkən xəta: " + e.message, "error");
+    }
+    input.value = ''; // Reset file input
 }
 
 
