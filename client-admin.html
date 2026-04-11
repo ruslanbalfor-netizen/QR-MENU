@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>QR Menu Admin</title>
-    <!-- Boxicons / FontAwesome for icons -->
+    <title>Məkan İdarəetmə | RUIS QR</title>
+    <link rel="icon" type="image/png" href="assets/ruis-logo.png">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700;800;900&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -19,30 +19,38 @@
         checkAuth();
     </script>
     <style>
-        /* Admin specific styles */
+        /* ===== Base ===== */
         body { font-family: 'Roboto', sans-serif; background: #f4f6f9; margin:0; display:flex; height:100vh; overflow:hidden;}
         h1, h2, h3, h4, h5, h6 { font-family: 'Montserrat', sans-serif; }
+        
+        /* ===== Sidebar ===== */
         .sidebar { width: 250px; background: #212529; color: white; padding: 20px 0; display:flex; flex-direction:column; }
-        .sidebar .brand { font-family: 'Montserrat', sans-serif; font-size:1.5rem; font-weight:700; padding: 0 20px 20px; border-bottom:1px solid #343a40; margin-bottom: 20px; text-align:center;}
+        .sidebar .brand { font-family: 'Montserrat', sans-serif; font-size:1.4rem; font-weight:700; padding: 0 20px 20px; border-bottom:1px solid #343a40; margin-bottom: 20px; text-align:center;}
         .sidebar .nav-item { padding: 12px 20px; cursor: pointer; transition: 0.2s; display:flex; align-items:center; gap: 10px; opacity: 0.7; font-weight:500;}
         .sidebar .nav-item:hover, .sidebar .nav-item.active { background: #343a40; opacity: 1; border-left: 4px solid #007bff; padding-left: 16px;}
         .sidebar .nav-item i { width: 20px; text-align:center; }
         
+        .place-info-box {
+            background:rgba(255,255,255,0.05); padding:15px; border-radius:10px;
+            border: 1px solid rgba(255,255,255,0.1); margin: 0 15px;
+        }
+        .place-info-box label { font-size:0.7rem; opacity:0.5; display:block; margin-bottom:5px; text-transform:uppercase; letter-spacing:1px; }
+        .place-info-box .place-name-display { font-weight:700; font-size:1rem; color: #60a5fa; }
+        
+        /* ===== Main Content ===== */
         .main-content { flex: 1; overflow-y: auto; padding: 30px; }
         .view-section { display: none; }
         .view-section:not(.hidden) { display: block; animation: fadeIn 0.3s; }
-        
         @keyframes fadeIn { from {opacity:0;} to {opacity:1;} }
         
-        .active-badge { display:inline-block; margin-left:10px; padding: 3px 8px; background: #28a745; border-radius:12px; font-size: 0.75rem; color:white; }
-        
-        /* Table/List styles */
+        /* ===== Data Items ===== */
         .data-item { background: white; border-radius: 8px; padding: 15px; margin-bottom: 15px; display:flex; justify-content:space-between; align-items:center; box-shadow: 0 2px 5px rgba(0,0,0,0.05); border-left:4px solid transparent; transition:0.2s;}
         .data-item:hover { border-left-color: #007bff; transform:translateY(-2px); box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
         .data-item h4 { margin: 0 0 5px 0; font-size:1.1rem;}
         .data-item p { margin: 0; color: #6c757d; font-size:0.9rem;}
         .data-actions { display:flex; gap:8px;}
         
+        /* ===== Buttons ===== */
         .btn { padding: 8px 15px; border-radius: 6px; border:none; cursor:pointer; font-weight:600; font-size:0.9rem; transition:0.2s; display:inline-flex; align-items:center; gap:5px;}
         .btn-primary { background: #007bff; color: white; }
         .btn-success { background: #28a745; color: white; }
@@ -53,7 +61,7 @@
         .btn:hover { opacity: 0.9; }
         .btn:disabled { opacity: 0.6; cursor: not-allowed; }
         
-        /* Modal Styles */
+        /* ===== Modal ===== */
         .modal { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); align-items:center; justify-content:center; z-index: 1000; backdrop-filter:blur(3px); }
         .modal.active { display:flex; }
         .modal-content { background: white; width: 90%; max-width: 600px; max-height: 90vh; overflow-y: auto; border-radius: 12px; padding: 25px; position:relative; box-shadow:0 10px 30px rgba(0,0,0,0.2); animation:slideDown 0.3s;}
@@ -64,9 +72,10 @@
         .close-btn { background:none; border:none; font-size:1.5rem; cursor:pointer; color:#6c757d; transition:0.2s; }
         .close-btn:hover { color:#dc3545; }
         
+        /* ===== Form ===== */
         .form-group { margin-bottom: 15px; }
         .form-group label { display:block; margin-bottom: 5px; font-weight: 600; font-size:0.9rem; color:#495057;}
-        .form-control { width: 100%; padding: 10px; border: 1px solid #ced4da; border-radius: 6px; font-size:1rem; font-family:inherit;box-sizing: border-box; transition:0.2s;}
+        .form-control { width: 100%; padding: 10px; border: 1px solid #ced4da; border-radius: 6px; font-size:1rem; font-family:inherit; box-sizing: border-box; transition:0.2s;}
         .form-control:focus { border-color: #80bdff; outline:0; box-shadow:0 0 0 0.2rem rgba(0,123,255,.25);}
         textarea.form-control { resize: vertical; }
         
@@ -78,10 +87,9 @@
         
         .section-header { display:flex; justify-content:space-between; align-items:center; margin-bottom: 20px; padding-bottom:10px; border-bottom:1px solid #dee2e6; }
         .section-header h2 { margin: 0; color:#212529; }
-        
         .text-muted { color: #6c757d; }
         
-        /* Toast Notifications */
+        /* ===== Toast ===== */
         #toast-container { position: fixed; top: 20px; right: 20px; z-index: 9999; pointer-events: none; }
         .toast { 
             background: #333; color: white; padding: 12px 20px; border-radius: 8px; margin-bottom: 10px;
@@ -93,6 +101,38 @@
         .toast-error { border-left: 4px solid #dc3545; }
         @keyframes slideIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
         @keyframes fadeOut { from { opacity: 1; } to { opacity: 0; } }
+
+        /* ===== Welcome Card ===== */
+        .welcome-card {
+            background: linear-gradient(135deg, #1e3a5f 0%, #0f172a 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 16px;
+            margin-bottom: 25px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        }
+        .welcome-card h2 { margin:0 0 8px; font-size:1.5rem; }
+        .welcome-card p { margin:0; opacity:0.7; font-size:0.95rem; }
+
+        /* ===== Place Settings Card ===== */
+        .settings-card {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+            margin-bottom: 20px;
+        }
+        .settings-card h3 { margin-top:0; color:#212529; display:flex; align-items:center; gap:10px; }
+        .settings-card h3 i { color:#007bff; }
+
+        /* ===== Responsive ===== */
+        @media (max-width: 768px) {
+            body { flex-direction: column; }
+            .sidebar { width: 100%; flex-direction: row; overflow-x: auto; padding: 10px 0; }
+            .sidebar .brand { display:none; }
+            .sidebar .nav-item { white-space:nowrap; padding: 8px 15px; }
+            .main-content { padding: 15px; }
+        }
     </style>
 </head>
 <body>
@@ -100,35 +140,29 @@
     <!-- Sidebar -->
     <div class="sidebar">
         <div class="brand">
-            <img src="assets/ruis-logo.png?v=1.1" style="height:40px; vertical-align:middle; margin-right:8px; border-radius:8px;">
-            RUIS Admin
+            <img src="assets/ruis-logo.png?v=1.1" style="height:35px; vertical-align:middle; margin-right:6px; border-radius:8px;">
+            Məkan Paneli
         </div>
         
-        <div class="nav-item active" data-view="places-view" id="nav-places">
-            <i class="fa-solid fa-map-location-dot"></i>
-            Məkanlar
+        <div class="nav-item active" data-view="place-settings-view" id="nav-place-settings">
+            <i class="fa-solid fa-store"></i>
+            Məkan Parametrləri
         </div>
-        <div class="nav-item" data-view="menu-view" id="nav-menu" style="opacity: 0.5; pointer-events: none;">
+        <div class="nav-item" data-view="menu-view" id="nav-menu">
             <i class="fa-solid fa-utensils"></i>
             Menyu İdarəetmə
         </div>
-        <div class="nav-item" data-view="settings-view" id="nav-settings" style="opacity: 0.5; pointer-events: none;">
+        <div class="nav-item" data-view="qr-view" id="nav-qr">
             <i class="fa-solid fa-qrcode"></i>
-            QR Kod & Parametrlər
-        </div>
-        <div class="nav-item" data-view="users-view" id="nav-users">
-            <i class="fa-solid fa-users-gear"></i>
-            İstifadəçilər
+            QR Kod
         </div>
         
-        <div style="margin-top:auto; padding:20px;">
-            <div id="active-place-badge" class="hidden" style="background:rgba(255,255,255,0.05); padding:12px; border-radius:10px; border: 1px solid rgba(255,255,255,0.1);">
-                <label style="font-size:0.75rem; opacity:0.6; display:block; margin-bottom:8px;">HANSINI İDARƏ EDİRSİNİZ?</label>
-                <select id="quick-place-selector" class="form-control" style="background:#343a40; color:white; border:1px solid #495057; font-size:0.85rem; padding:5px;">
-                    <!-- Options will be populated by JS -->
-                </select>
+        <div style="margin-top:auto; padding:15px;">
+            <div class="place-info-box" id="place-info-box" style="display:none;">
+                <label>SİZİN MƏKANINIZ</label>
+                <div class="place-name-display" id="place-name-display">—</div>
             </div>
-            <a href="index.html" id="view-site-link" target="_blank" style="color:white; text-decoration:none; display:flex; align-items:center; gap:8px; margin-top:15px; font-size:0.9rem; opacity:0.8; transition:0.2s;">
+            <a href="#" id="view-site-link" target="_blank" style="color:white; text-decoration:none; display:flex; align-items:center; gap:8px; margin-top:15px; font-size:0.9rem; opacity:0.8; transition:0.2s;">
                 <i class="fa-solid fa-external-link-alt"></i> Sayta bax
             </a>
             <a href="#" onclick="logout()" style="color:#ff6b6b; text-decoration:none; display:flex; align-items:center; gap:8px; margin-top:15px; font-size:0.9rem; opacity:0.8; transition:0.2s;">
@@ -140,15 +174,97 @@
     <!-- Main Content -->
     <div class="main-content">
     
-        <!-- PLACES VIEW -->
-        <div id="places-view" class="view-section">
-            <div class="section-header">
-                <h2>Məkanlar (Restoran/Kafe)</h2>
-                <button class="btn btn-success" onclick="openPlaceModal()"><i class="fa-solid fa-plus"></i> Yeni Məkan</button>
+        <!-- PLACE SETTINGS VIEW -->
+        <div id="place-settings-view" class="view-section">
+            <div class="welcome-card">
+                <h2><i class="fa-solid fa-hand-wave" style="margin-right:8px;"></i> Xoş Gəldiniz!</h2>
+                <p>Buradan məkanınızın bütün parametrlərini idarə edə bilərsiniz.</p>
             </div>
-            <div class="text-muted" style="margin-bottom:15px;">Məhsulları və menyunu idarə etmək üçün mövcud məkanlardan birini seçin və ya yeni məkan yaradın.</div>
-            <div id="places-list">
-                <!-- Places injected here -->
+
+            <div class="settings-card">
+                <h3><i class="fa-solid fa-pen-to-square"></i> Məkan Məlumatları</h3>
+                <form id="client-place-form">
+                    <input type="hidden" id="place-v-id">
+                    <div class="form-group">
+                        <label>Restoranın/Kafenin Adı</label>
+                        <input type="text" id="place-v-name" class="form-control" placeholder="Məs: Bizim Kafe" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Valyuta</label>
+                        <select id="place-v-currency" class="form-control">
+                            <option value="AZN">AZN</option>
+                            <option value="USD">USD</option>
+                            <option value="EUR">EUR</option>
+                            <option value="RUB">RUB</option>
+                            <option value="TRY">TRY</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Xidmət Haqqı (% olaraq)</label>
+                        <input type="number" id="place-v-service-charge" class="form-control" placeholder="0" min="0" max="100" value="0">
+                    </div>
+                    
+                    <h4 style="margin:20px 0 10px; border-bottom:1px solid #eee; padding-bottom:5px;">Əlaqə & Sosial Şəbəkələr</h4>
+                    <div style="display:grid; grid-template-columns:1fr 1fr; gap:15px;">
+                        <div class="form-group">
+                            <label>Telefon</label>
+                            <input type="text" id="place-v-phone" class="form-control" placeholder="+994...">
+                        </div>
+                        <div class="form-group">
+                            <label>WhatsApp Nömrəsi</label>
+                            <input type="text" id="place-v-whatsapp" class="form-control" placeholder="99450...">
+                        </div>
+                        <div class="form-group">
+                            <label>Instagram Username</label>
+                            <input type="text" id="place-v-instagram" class="form-control" placeholder="@username">
+                        </div>
+                        <div class="form-group">
+                            <label>Facebook URL</label>
+                            <input type="text" id="place-v-facebook" class="form-control" placeholder="https://facebook.com/...">
+                        </div>
+                        <div class="form-group">
+                            <label>Google Link (Maps/Review)</label>
+                            <input type="text" id="place-v-google" class="form-control" placeholder="https://goo.gl/maps/...">
+                        </div>
+                    </div>
+
+                    <h4 style="margin:20px 0 10px; border-bottom:1px solid #eee; padding-bottom:5px;">Dizayn (Şəkillər & Mövzu)</h4>
+                    <div class="form-group">
+                        <label>Brend Rəngi / Mövzu</label>
+                        <select id="place-v-theme" class="form-control">
+                            <option value="default">Default Blue (Standart Mavi)</option>
+                            <option value="rum-chocolate">Rum Chocolate (Tünd Qırmızı/Şokolad)</option>
+                            <option value="yoghurt">Yoghurt (Krem/Bej)</option>
+                            <option value="vivid-orange">Vivid Orange (Parlaq Narıncı)</option>
+                            <option value="oceanic-noir">Oceanic Noir (Tünd Okean Mavisi)</option>
+                            <option value="seafoam">Seafoam (Dəniz Köpüyü/Yaşıl)</option>
+                            <option value="citrus-orange">Citrus Orange (Sitrus Narıncı)</option>
+                            <option value="lime-green">Lime Green (Laym Yaşılı)</option>
+                            <option value="lemon-yellow">Lemon Yellow (Limon Sarısı)</option>
+                            <option value="ruby-red">Ruby Red (Rubin Qırmızısı)</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Loqo Şəkli</label>
+                        <input type="hidden" id="place-v-logo">
+                        <input type="file" id="place-v-logo-file" class="form-control" accept="image/*" onchange="previewImage(this, 'place-logo-preview')">
+                        <small class="text-muted" style="display:block; margin-top:5px;">Tövsiyə: 400x400 px, Maks: 50 KB (WebP/JPG)</small>
+                        <img id="place-logo-preview" src="" style="width:80px; height:80px; object-fit:cover; margin-top:10px; display:none; border-radius:50%; border:2px solid #eee;">
+                    </div>
+                    <div class="form-group">
+                        <label>Ön Qapaq Şəkli (Cover)</label>
+                        <input type="hidden" id="place-v-cover">
+                        <input type="file" id="place-v-cover-file" class="form-control" accept="image/*" onchange="previewImage(this, 'place-cover-preview')">
+                        <small class="text-muted" style="display:block; margin-top:5px;">Tövsiyə: 1200x600 px, Maks: 300 KB (WebP/JPG)</small>
+                        <img id="place-cover-preview" src="" style="height:120px; width:100%; object-fit:cover; margin-top:10px; display:none; border-radius:8px;">
+                    </div>
+
+                    <div style="margin-top:25px; display:flex; justify-content:flex-end;">
+                        <button type="submit" class="btn btn-primary" id="place-save-btn" style="padding:12px 30px; font-size:1rem;">
+                            <i class="fa-solid fa-floppy-disk"></i> Dəyişiklikləri Yadda Saxla
+                        </button>
+                    </div>
+                </form>
             </div>
         </div>
         
@@ -178,25 +294,17 @@
             </div>
         </div>
         
-        <!-- SETTINGS VIEW -->
-        <div id="settings-view" class="view-section hidden">
+        <!-- QR CODE VIEW -->
+        <div id="qr-view" class="view-section hidden">
             <div class="section-header">
-                <h2>QR Kod və Digər Parametrlər</h2>
+                <h2>QR Kod</h2>
             </div>
             
-            <div style="background:white; padding:25px; border-radius:12px; box-shadow:0 2px 5px rgba(0,0,0,0.05); max-width:600px;">
-                <h3 style="margin-top:0;">Məkanınızın QR Kodu</h3>
+            <div class="settings-card" style="max-width:600px;">
+                <h3><i class="fa-solid fa-qrcode"></i> Məkanınızın QR Kodu</h3>
                 <p class="text-muted">Bu QR kodu çap edib masalara yerləşdirə və ya müştərilərinizlə paylaşa bilərsiniz.</p>
                 
-                <div style="margin: 20px 0;">
-                    <label style="display:block; margin-bottom:5px; font-weight:600;">Xüsusi Domen (Opsional) - məs: https://sizindomen.com/</label>
-                    <div style="display:flex; gap:10px;">
-                        <input type="text" id="custom-domain" class="form-control" placeholder="Xüsusi domeniniz varsa bura yazın (vercel URL yoxdursa)" oninput="generateQrCode()">
-                        <button class="btn btn-success" id="save-domain-btn" onclick="saveCustomDomain()" style="padding: 10px 20px; text-transform:uppercase; font-weight:bold; min-width:100px;">Save</button>
-                    </div>
-                </div>
-                
-                <div style="text-align:center; padding: 30px; background:#f8f9fa; border-radius:8px; border:2px dashed #dee2e6; margin-bottom:20px;">
+                <div style="text-align:center; padding: 30px; background:#f8f9fa; border-radius:8px; border:2px dashed #dee2e6; margin: 20px 0;">
                     <img id="main-qr-img" src="" alt="QR Təsviri" style="max-width:250px; display:block; margin:0 auto; background:white; padding:10px; border-radius:10px; box-shadow:0 4px 10px rgba(0,0,0,0.1);">
                     <br>
                     <a id="qr-preview-link" href="#" target="_blank" style="color:#007bff; text-decoration:none; display:inline-flex; align-items:center; gap:5px; font-weight:600;"><i class="fa-solid fa-link"></i> Linkə keçid et</a>
@@ -206,124 +314,9 @@
             </div>
         </div>
 
-        <!-- USERS VIEW -->
-        <div id="users-view" class="view-section hidden">
-            <div class="section-header">
-                <h2>Məkan Adminləri (Müştəri Hesabları)</h2>
-                <button class="btn btn-success" onclick="openUserModal()"><i class="fa-solid fa-plus"></i> Yeni Əlaqə</button>
-            </div>
-            <div class="text-muted" style="margin-bottom:15px;">
-                <p><strong>Necə işləyir:</strong></p>
-                <ol style="margin:5px 0; padding-left:20px; line-height:1.8;">
-                    <li>Supabase Dashboard → Authentication → Users → <strong>"Add User"</strong> ilə yeni istifadəçi yaradın</li>
-                    <li>Buradan həmin istifadəçinin <strong>User ID</strong>-sini müvafiq məkana bağlayın</li>
-                    <li>Müştəri <code>login.html</code> səhifəsindən giriş edəndə avtomatik olaraq öz məkanının panelinə yönləndirilir</li>
-                </ol>
-            </div>
-            <div id="users-list">
-                <!-- Users injected here -->
-            </div>
-        </div>
-
     </div>
 
     <!-- =============== MODALS =============== -->
-
-    <!-- Place Modal -->
-    <div id="place-modal" class="modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h2 id="place-modal-title">Yeni Məkan</h2>
-                <button class="close-btn" onclick="closeModal('place-modal')">&times;</button>
-            </div>
-            <form id="place-form">
-                <input type="hidden" id="place-v-id">
-                <div class="form-group">
-                    <label>Restoranın/Kafenin Adı</label>
-                    <input type="text" id="place-v-name" class="form-control" placeholder="Məs: Bizim Kafe" required>
-                </div>
-                <div class="form-group">
-                    <label>Qısa Adı (Link üçün - yalnız kiçik ingilis hərfləri və tire)</label>
-                    <input type="text" id="place-v-slug" class="form-control" placeholder="bizim-kafe" pattern="[a-z0-9\-]+" required>
-                </div>
-                <div class="form-group">
-                    <label>Valyuta</label>
-                    <select id="place-v-currency" class="form-control">
-                        <option value="AZN">AZN</option>
-                        <option value="USD">USD</option>
-                        <option value="EUR">EUR</option>
-                        <option value="RUB">RUB</option>
-                        <option value="TRY">TRY</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label>Xidmət Haqqı (% olaraq - Məs: 5)</label>
-                    <input type="number" id="place-v-service-charge" class="form-control" placeholder="0" min="0" max="100" value="0">
-                </div>
-                
-                <h4 style="margin:20px 0 10px; border-bottom:1px solid #eee; padding-bottom:5px;">Əlaqə & Sosial Şəbəkələr</h4>
-                <div style="display:grid; grid-template-columns:1fr 1fr; gap:15px;">
-                    <div class="form-group">
-                        <label>Telefon</label>
-                        <input type="text" id="place-v-phone" class="form-control" placeholder="+994...">
-                    </div>
-                    <div class="form-group">
-                        <label>WhatsApp Nömrəsi</label>
-                        <input type="text" id="place-v-whatsapp" class="form-control" placeholder="99450...">
-                    </div>
-                    <div class="form-group">
-                        <label>Instagram Username</label>
-                        <input type="text" id="place-v-instagram" class="form-control" placeholder="@username">
-                    </div>
-                    <div class="form-group">
-                        <label>Facebook URL</label>
-                        <input type="text" id="place-v-facebook" class="form-control" placeholder="https://facebook.com/...">
-                    </div>
-                    <div class="form-group">
-                        <label>Google Link (Maps/Review)</label>
-                        <input type="text" id="place-v-google" class="form-control" placeholder="https://goo.gl/maps/...">
-                    </div>
-                </div>
-
-                <h4 style="margin:20px 0 10px; border-bottom:1px solid #eee; padding-bottom:5px;">Dizayn (Şəkillər & Mövzu)</h4>
-                <div class="form-group">
-                    <label>Brend Rəngi / Mövzu</label>
-                    <select id="place-v-theme" class="form-control">
-                        <option value="default">Default Blue (Standart Mavi)</option>
-                        <option value="rum-chocolate">Rum Chocolate (Tünd Qırmızı/Şokolad)</option>
-                        <option value="yoghurt">Yoghurt (Krem/Bej)</option>
-                        <option value="vivid-orange">Vivid Orange (Parlaq Narıncı)</option>
-                        <option value="oceanic-noir">Oceanic Noir (Tünd Okean Mavisi)</option>
-                        <option value="seafoam">Seafoam (Dəniz Köpüyü/Yaşıl)</option>
-                        <option value="citrus-orange">Citrus Orange (Sitrus Narıncı)</option>
-                        <option value="lime-green">Lime Green (Laym Yaşılı)</option>
-                        <option value="lemon-yellow">Lemon Yellow (Limon Sarısı)</option>
-                        <option value="ruby-red">Ruby Red (Rubin Qırmızısı)</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label>Loqo Şəkli</label>
-                    <input type="hidden" id="place-v-logo">
-                    <input type="file" id="place-v-logo-file" class="form-control" accept="image/*" onchange="previewImage(this, 'place-logo-preview')">
-                    <small class="text-muted" style="display:block; margin-top:5px;">Tövsiyə: 400x400 px, Maks: 50 KB (WebP/JPG)</small>
-                    <img id="place-logo-preview" src="" style="width:80px; height:80px; object-fit:cover; margin-top:10px; display:none; border-radius:50%; border:2px solid #eee;">
-                </div>
-                <div class="form-group">
-                    <label>Ön Qapaq Şəkli (Cover)</label>
-                    <input type="hidden" id="place-v-cover">
-                    <input type="file" id="place-v-cover-file" class="form-control" accept="image/*" onchange="previewImage(this, 'place-cover-preview')">
-                    <small class="text-muted" style="display:block; margin-top:5px;">Tövsiyə: 1200x600 px, Maks: 300 KB (WebP/JPG)</small>
-                    <img id="place-cover-preview" src="" style="height:120px; width:100%; object-fit:cover; margin-top:10px; display:none; border-radius:8px;">
-                </div>
-
-                <div style="margin-top:25px; display:flex; justify-content:flex-end; gap:10px;">
-                    <button type="button" class="btn btn-outline" onclick="closeModal('place-modal')">Ləğv Et</button>
-                    <button type="submit" class="btn btn-primary" id="place-save-btn">Yadda Saxla</button>
-                </div>
-            </form>
-        </div>
-    </div>
-
 
     <!-- Category Modal -->
     <div id="category-modal" class="modal">
@@ -333,7 +326,7 @@
                 <button class="close-btn" onclick="closeModal('category-modal')">&times;</button>
             </div>
             
-            <div id="cat-modal"> <!-- Workaround wrapper for admin2.js switchTab selector -->
+            <div id="cat-modal"> <!-- Wrapper for switchTab selector -->
                 <div class="lang-tabs">
                     <div class="lang-tab active" onclick="switchTab('cat', 'az', event)"><img src="assets/icons/az.png?v=3.0" alt="" aria-hidden="true"> AZ</div>
                     <div class="lang-tab" onclick="switchTab('cat', 'en', event)"><img src="assets/icons/en.png?v=3.0" alt="" aria-hidden="true"> EN</div>
@@ -484,50 +477,12 @@
         </div>
     </div>
 
-    <!-- User Assignment Modal -->
-    <div id="user-modal" class="modal">
-        <div class="modal-content" style="max-width: 500px;">
-            <div class="modal-header">
-                <h2 id="user-modal-title">İstifadəçi-Məkan Əlaqəsi</h2>
-                <button class="close-btn" onclick="closeModal('user-modal')">&times;</button>
-            </div>
-            <form id="user-form">
-                <input type="hidden" id="user-v-id">
-                <div class="form-group">
-                    <label>Supabase User ID</label>
-                    <input type="text" id="user-v-user_id" class="form-control" placeholder="Məs: a1b2c3d4-e5f6-7890-abcd-1234567890ef" required>
-                    <small class="text-muted" style="display:block; margin-top:5px;">Supabase Dashboard → Authentication → Users → İstifadəçini seçin → ID-ni kopyalayın</small>
-                </div>
-                <div class="form-group">
-                    <label>Məkan</label>
-                    <select id="user-v-place_id" class="form-control" required>
-                        <option value="">-- Məkan Seçin --</option>
-                        <!-- Populated by JS -->
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label>Rol</label>
-                    <select id="user-v-role" class="form-control">
-                        <option value="place_admin">Məkan Admini (Müştəri)</option>
-                        <option value="super_admin">Super Admin</option>
-                    </select>
-                    <small class="text-muted" style="display:block; margin-top:5px;">Müştərilər üçün "Məkan Admini" seçin. Super Admin bütün məkanlara tam giriş verir.</small>
-                </div>
-                <div style="margin-top:25px; display:flex; justify-content:flex-end; gap:10px;">
-                    <button type="button" class="btn btn-outline" onclick="closeModal('user-modal')">Ləğv Et</button>
-                    <button type="submit" class="btn btn-primary" id="user-save-btn">Əlaqəni Yadda Saxla</button>
-                </div>
-            </form>
-        </div>
-    </div>
-
     <!-- Toast Container -->
     <div id="toast-container"></div>
 
     <!-- Scripts -->
-    <!-- Supabase SDK before local scripts -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="supabase-config.js"></script>
-    <script src="admin2.js?v=4.0"></script>
+    <script src="client-admin.js?v=1.0"></script>
 </body>
 </html>

@@ -98,6 +98,39 @@
     </div>
 
     <script>
+        // Determine redirect based on user role
+        async function getRedirectUrl(userId) {
+            try {
+                const { data, error } = await window.supabaseClient
+                    .from('place_admins')
+                    .select('role')
+                    .eq('user_id', userId);
+
+                if (error) {
+                    console.warn('place_admins sorğusu xətası:', error.message);
+                    // Fallback: if table doesn't exist yet or error, go to admin
+                    return 'admin.html';
+                }
+
+                if (!data || data.length === 0) {
+                    // İstifadəçi place_admins cədvəlində yoxdur — super admin kimi qəbul et (geriyə uyğunluq)
+                    return 'admin.html';
+                }
+
+                // Check if user is super_admin
+                const isSuperAdmin = data.some(row => row.role === 'super_admin');
+                if (isSuperAdmin) {
+                    return 'admin.html';
+                }
+
+                // Otherwise, place_admin → client admin panel
+                return 'client-admin.html';
+            } catch (e) {
+                console.error('Redirect xətası:', e);
+                return 'admin.html';
+            }
+        }
+
         document.getElementById('login-form').addEventListener('submit', async (e) => {
             e.preventDefault();
             const email = document.getElementById('email').value;
@@ -117,8 +150,9 @@
 
                 if (error) throw error;
 
-                // Success! Redirect to admin
-                window.location.href = 'admin.html';
+                // Determine redirect based on role
+                const redirectUrl = await getRedirectUrl(data.user.id);
+                window.location.href = redirectUrl;
             } catch (err) {
                 errorElement.textContent = "Giriş xətası: " + err.message;
                 errorElement.style.display = 'block';
@@ -131,7 +165,8 @@
         async function checkSession() {
             const { data: { session } } = await window.supabaseClient.auth.getSession();
             if (session) {
-                window.location.href = 'admin.html';
+                const redirectUrl = await getRedirectUrl(session.user.id);
+                window.location.href = redirectUrl;
             }
         }
         checkSession();

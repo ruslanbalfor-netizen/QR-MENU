@@ -39,6 +39,8 @@ document.addEventListener('DOMContentLoaded', async () => {
                 renderItems();
             } else if (nav.dataset.view === 'settings-view') {
                 generateQrCode();
+            } else if (nav.dataset.view === 'users-view') {
+                loadUsers();
             }
         });
     });
@@ -1036,11 +1038,142 @@ window.saveCustomDomain = function() {
     }
 }
 
-// Logout function
 window.logout = async function() {
     if (confirm("Sistemdən çıxış etmək istəyirsiniz?")) {
         const { error } = await supabaseClientLocal.auth.signOut();
         if (error) alert("Çıxış xətası: " + error.message);
         window.location.href = 'login.html';
+    }
+}
+
+
+// ================= USERS / PLACE ADMINS =================
+
+let cachedUserAssignments = [];
+
+async function loadUsers() {
+    try {
+        const { data, error } = await supabaseClientLocal
+            .from('place_admins')
+            .select('*')
+            .order('created_at', { ascending: false });
+
+        if (error) throw error;
+        cachedUserAssignments = data || [];
+        renderUsersList(data || []);
+    } catch (e) {
+        console.error('Load Users Error:', e);
+        const list = document.getElementById('users-list');
+        if (list) list.innerHTML = `<div style="color:#dc3545; padding:20px;">
+            <h4>İstifadəçi məlumatlarını yükləmək mümkün olmadı</h4>
+            <p>${e.message}</p>
+            <small>Yoxlayın: place_admins cədvəli yaradılıb mı? create_place_admins.sql-i Supabase SQL Editor-da icra edin.</small>
+        </div>`;
+    }
+}
+
+function renderUsersList(data) {
+    const list = document.getElementById('users-list');
+    if (!list) return;
+    list.innerHTML = '';
+
+    if (data.length === 0) {
+        list.innerHTML = '<div style="text-align:center; padding:20px; color:#6c757d;">Heç bir istifadəçi-məkan əlaqəsi yoxdur.</div>';
+        return;
+    }
+
+    data.forEach(record => {
+        const place = window.cachedPlaces.find(p => p.id === record.place_id);
+        const placeName = place ? escapeAdminHTML(place.name) : (record.place_id ? 'Naməlum Məkan' : '— (Bütün məkanlar)');
+        const roleLabel = record.role === 'super_admin'
+            ? '<span style="background:#dc3545;color:white;padding:2px 8px;border-radius:12px;font-size:0.75rem;">Super Admin</span>'
+            : '<span style="background:#007bff;color:white;padding:2px 8px;border-radius:12px;font-size:0.75rem;">Məkan Admini</span>';
+
+        const item = document.createElement('div');
+        item.className = 'data-item';
+        item.innerHTML = `
+            <div class="data-info">
+                <h4><i class="fa-solid fa-user" style="margin-right:8px; color:#6c757d;"></i> ${escapeAdminHTML(record.user_id.substring(0, 8))}... ${roleLabel}</h4>
+                <p><i class="fa-solid fa-store" style="margin-right:5px;"></i> Məkan: ${placeName}</p>
+                <p style="font-size:0.8rem; color:#adb5bd;">Yaradılıb: ${new Date(record.created_at).toLocaleDateString('az-AZ')}</p>
+            </div>
+            <div class="data-actions">
+                <button class="btn btn-danger" onclick="deleteUserAssignment('${record.id}')">
+                    <i class="fa-solid fa-trash"></i> Sil
+                </button>
+            </div>
+        `;
+        list.appendChild(item);
+    });
+}
+
+window.openUserModal = function () {
+    const form = document.getElementById('user-form');
+    if (form) form.reset();
+    document.getElementById('user-v-id').value = '';
+    document.getElementById('user-modal-title').innerText = 'Yeni İstifadəçi-Məkan Əlaqəsi';
+
+    // Populate place selector
+    const placeSelect = document.getElementById('user-v-place_id');
+    placeSelect.innerHTML = '<option value="">-- Məkan Seçin --</option>';
+    window.cachedPlaces.forEach(p => {
+        placeSelect.innerHTML += `<option value="${p.id}">${escapeAdminHTML(p.name)}</option>`;
+    });
+
+    openModal('user-modal');
+}
+
+// User form submit
+const userForm = document.getElementById('user-form');
+if (userForm) {
+    userForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const btn = document.getElementById('user-save-btn');
+        const originalBtnText = btn.innerHTML;
+        btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Gözləyin...';
+        btn.disabled = true;
+
+        try {
+            const userId = document.getElementById('user-v-user_id').value.trim();
+            const placeId = document.getElementById('user-v-place_id').value;
+            const role = document.getElementById('user-v-role').value;
+
+            if (!userId) throw new Error('User ID daxil edin');
+
+            const payload = {
+                user_id: userId,
+                place_id: role === 'super_admin' ? null : placeId,
+                role: role
+            };
+
+            if (role === 'place_admin' && !placeId) {
+                throw new Error('Məkan admini üçün məkan seçilməlidir');
+            }
+
+            const { error } = await supabaseClientLocal.from('place_admins').insert([payload]);
+            if (error) throw error;
+
+            closeModal('user-modal');
+            loadUsers();
+            showToast('İstifadəçi-məkan əlaqəsi yaradıldı!');
+        } catch (e) {
+            showToast('Xəta: ' + e.message, 'error');
+        } finally {
+            btn.innerHTML = originalBtnText;
+            btn.disabled = false;
+        }
+    });
+}
+
+window.deleteUserAssignment = async function (id) {
+    if (confirm('Bu istifadəçi-məkan əlaqəsini silmək istəyirsiniz? İstifadəçi daha bu məkanı idarə edə bilməyəcək.')) {
+        try {
+            const { error } = await supabaseClientLocal.from('place_admins').delete().eq('id', id);
+            if (error) throw error;
+            loadUsers();
+            showToast('Əlaqə silindi.');
+        } catch (e) {
+            showToast('Əlaqə silinərkən xəta: ' + e.message, 'error');
+        }
     }
 }
