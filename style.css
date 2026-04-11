@@ -994,6 +994,12 @@ body.dark-mode .theme-option.active {
     border-color: #bbf7d0 !important;
 }
 
+.badge-gluten-free {
+    background-color: #fef08a !important;
+    color: #854d0e !important;
+    border-color: #fde047 !important;
+}
+
 .badge-new {
     background-color: #e8f5e9;
     color: #2e7d32;

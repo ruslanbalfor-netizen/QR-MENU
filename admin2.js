@@ -838,7 +838,10 @@ document.getElementById('item-form').addEventListener('submit', async (e) => {
             prep_time: prepTime || null,
             is_kid_friendly: document.getElementById('item-v-is_kid_friendly').checked,
             is_active: document.getElementById('item-v-is_active').checked,
-            badges: document.getElementById('item-v-is_vegan') && document.getElementById('item-v-is_vegan').checked ? ['Vegan'] : []
+            badges: [
+                document.getElementById('item-v-is_vegan') && document.getElementById('item-v-is_vegan').checked ? 'Vegan' : null,
+                document.getElementById('item-v-is_gluten_free') && document.getElementById('item-v-is_gluten_free').checked ? 'Gluten Free' : null
+            ].filter(Boolean)
         };
 
         let dbError;
@@ -907,6 +910,8 @@ window.openItemModal = async function (id = null) {
             if (activeBoxEdit) activeBoxEdit.checked = data.is_active !== false;
             const veganBox = document.getElementById('item-v-is_vegan');
             if (veganBox) veganBox.checked = data.badges && data.badges.includes('Vegan');
+            const glutenBox = document.getElementById('item-v-is_gluten_free');
+            if (glutenBox) glutenBox.checked = data.badges && data.badges.includes('Gluten Free');
         }
     }
     openModal('item-modal');

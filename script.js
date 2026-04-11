@@ -167,9 +167,9 @@ document.addEventListener('DOMContentLoaded', () => {
     };
     const translations = {
         kidFriendly: {
-            az: 'Uşaqlar üçün uyğundur',
-            en: 'Kid-Friendly',
-            ru: 'Подходит для детей'
+            az: 'Kids Approved',
+            en: 'Kids Approved',
+            ru: 'Kids Approved'
         }
     };
 
@@ -489,7 +489,13 @@ document.addEventListener('DOMContentLoaded', () => {
             let badgesHtml = '';
             if (item.badges && item.badges.length > 0) {
                 badgesHtml = `<div class="item-badges">
-                    ${item.badges.map(b => `<span class="badge ${b === 'Vegan' ? 'badge-vegan' : ''}">${b === 'Vegan' ? '<i class="fa-solid fa-leaf" style="margin-right:3px;"></i>' : ''}${b}</span>`).join('')}
+                    ${item.badges.map(b => {
+                        let icon = '';
+                        let extraClass = '';
+                        if (b === 'Vegan') { icon = '🥦 '; extraClass = 'badge-vegan'; }
+                        else if (b === 'Gluten Free') { icon = '🌾🚫 '; extraClass = 'badge-gluten-free'; }
+                        return `<span class="badge ${extraClass}">${icon}${b}</span>`;
+                    }).join('')}
                 </div>`;
             }
 
@@ -498,7 +504,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 metaHtml = `<div class="item-meta">
                     ${item.calories ? `<span class="meta-info"><i class="fa-solid fa-fire text-muted"></i> ${item.calories} kcal</span>` : ''}
                     ${item.prepTime ? `<span class="meta-info"><i class="fa-regular fa-clock"></i> ${item.prepTime}</span>` : ''}
-                    ${item.isKidFriendly ? `<span class="meta-info"><i class="fa-solid fa-child"></i> ${translations.kidFriendly[currentLang] || translations.kidFriendly.az}</span>` : ''}
+                    ${item.isKidFriendly ? `<span class="meta-info">👶 ${translations.kidFriendly[currentLang] || translations.kidFriendly.az}</span>` : ''}
                 </div>`;
             }
 
@@ -741,7 +747,13 @@ document.addEventListener('DOMContentLoaded', () => {
         // Badges & Meta
         const badgesContainer = document.getElementById('modal-item-badges');
         if (item.badges && item.badges.length > 0) {
-            badgesContainer.innerHTML = item.badges.map(b => `<span class="badge ${b === 'Vegan' ? 'badge-vegan' : ''}">${b === 'Vegan' ? '<i class="fa-solid fa-leaf" style="margin-right:3px;"></i>' : ''}${escapeHTML(b)}</span>`).join(' ');
+            badgesContainer.innerHTML = item.badges.map(b => {
+                let icon = '';
+                let extraClass = '';
+                if (b === 'Vegan') { icon = '🥦 '; extraClass = 'badge-vegan'; }
+                else if (b === 'Gluten Free') { icon = '🌾🚫 '; extraClass = 'badge-gluten-free'; }
+                return `<span class="badge ${extraClass}">${icon}${escapeHTML(b)}</span>`;
+            }).join(' ');
         } else {
             badgesContainer.innerHTML = '';
         }
@@ -750,7 +762,7 @@ document.addEventListener('DOMContentLoaded', () => {
         let metaHtml = '';
         if (item.calories) metaHtml += `<span class="meta-info"><i class="fa-solid fa-fire text-muted"></i> ${escapeHTML(item.calories)} kcal</span> `;
         if (item.prepTime) metaHtml += `<span class="meta-info"><i class="fa-regular fa-clock text-muted"></i> ${escapeHTML(item.prepTime)}</span> `;
-        if (item.isKidFriendly) metaHtml += `<span class="meta-info"><i class="fa-solid fa-child"></i> ${translations.kidFriendly[currentLang] || translations.kidFriendly.az}</span>`;
+        if (item.isKidFriendly) metaHtml += `<span class="meta-info">👶 ${translations.kidFriendly[currentLang] || translations.kidFriendly.az}</span>`;
         metaContainer.innerHTML = metaHtml;
 
         itemDetailModal.classList.add('active');
