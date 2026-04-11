@@ -1163,6 +1163,10 @@ document.addEventListener('DOMContentLoaded', () => {
         if (waLabel) waLabel.textContent = translations.waLabel[currentLang];
 
         if (checkoutBtn) checkoutBtn.innerHTML = translations.checkoutBtn[currentLang];
+
+        const searchInputLocal = document.getElementById('menu-search-input');
+        const searchPlaceholder = { az: "Yemək, içki və ya kateqoriya axtar...", en: "Search food, drinks or categories...", ru: "Поиск еды, напитков или категорий...", ar: "ابحث عن الطعام والمشروبات أو الفئات..." };
+        if (searchInputLocal) searchInputLocal.placeholder = searchPlaceholder[currentLang] || searchPlaceholder.az;
     }
 
     // --- Search Functionality ---
@@ -1171,10 +1175,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Create No Results Element
     let noResultsEl = document.querySelector('.no-results-msg');
-    
-    // Static translations for UI parts not covered in reRenderApp yet
-    const searchPlaceholder = { az: "Yemək, içki və ya kateqoriya axtar...", en: "Search food, drinks or categories...", ru: "Поиск еды, напитков или категорий...", ar: "ابحث عن الطعام والمشروبات أو الفئات..." };
-    if (searchInput) searchInput.placeholder = searchPlaceholder[currentLang] || searchPlaceholder.az;
 
     if (!noResultsEl) {
         noResultsEl = document.createElement('div');
