@@ -320,15 +320,44 @@ document.addEventListener('DOMContentLoaded', () => {
                 socialHtml += `<a href="${placeData.google_url}" class="social-circle-btn" target="_blank"><img src="assets/icons/google.png" alt="Google" class="social-icon-img"></a>`;
             }
 
-            let socialWrapper = document.getElementById('place-social-links');
-            if (!socialWrapper) {
-                socialWrapper = document.createElement('div');
-                socialWrapper.id = 'place-social-links';
-                socialWrapper.className = 'social-circles';
-                const container = document.getElementById('social-branding-container');
-                if (container) container.appendChild(socialWrapper);
+            if (socialHtml) {
+                let premiumBtnWrapper = document.getElementById('premium-social-wrapper');
+                if (!premiumBtnWrapper) {
+                    premiumBtnWrapper = document.createElement('div');
+                    premiumBtnWrapper.id = 'premium-social-wrapper';
+                    
+                    premiumBtnWrapper.innerHTML = `
+                        <button class="premium-social-btn" id="open-social-modal">
+                            <i class="fa-solid fa-gift pulse-icon"></i> <span>Bizi izləyin</span>
+                        </button>
+                        <div class="social-modal-overlay" id="social-modal">
+                            <div class="social-modal-content">
+                                <div class="social-modal-header">
+                                    <h3>Bizi İzləyin!</h3>
+                                    <button class="close-social-btn" id="close-social-btn"><i class="fa-solid fa-xmark"></i></button>
+                                </div>
+                                <div class="social-circles" id="social-links-container"></div>
+                            </div>
+                        </div>
+                    `;
+                    const container = document.getElementById('social-branding-container');
+                    if (container) container.appendChild(premiumBtnWrapper);
+
+                    document.getElementById('open-social-modal').addEventListener('click', () => {
+                        document.getElementById('social-modal').classList.add('active');
+                    });
+                    document.getElementById('close-social-btn').addEventListener('click', () => {
+                        document.getElementById('social-modal').classList.remove('active');
+                    });
+                    document.getElementById('social-modal').addEventListener('click', (e) => {
+                        if (e.target === document.getElementById('social-modal')) {
+                            document.getElementById('social-modal').classList.remove('active');
+                        }
+                    });
+                }
+                const linksContainer = document.getElementById('social-links-container');
+                if (linksContainer) linksContainer.innerHTML = socialHtml;
             }
-            if (socialWrapper) socialWrapper.innerHTML = socialHtml;
 
             // Service Charge Badge
             if (appData.branding.service_charge > 0) {
