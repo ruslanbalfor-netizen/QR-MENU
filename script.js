@@ -292,7 +292,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             // Phone
             if (placeData.phone) {
-                socialHtml += `<a href="tel:${placeData.phone}" class="social-circle-btn"><i class="fa-solid fa-phone"></i></a>`;
+                socialHtml += `<a href="tel:${placeData.phone}" class="social-circle-btn"><img src="assets/icons/phone.png" alt="Phone" class="social-icon-img" style="background: white; object-fit: contain;"></a>`;
             }
 
             // WhatsApp
@@ -317,7 +317,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             // Google Maps / Review
             if (placeData.google_url) {
-                socialHtml += `<a href="${placeData.google_url}" class="social-circle-btn" target="_blank"><img src="assets/icons/google.png" alt="Google" class="social-icon-img"></a>`;
+                socialHtml += `<a href="${placeData.google_url}" class="social-circle-btn" target="_blank"><img src="assets/icons/google.avif" alt="Google" class="social-icon-img" style="background: white; object-fit: contain;"></a>`;
             }
 
             if (socialHtml) {
