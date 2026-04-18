@@ -698,8 +698,21 @@ body.dark-mode .footer-links a.gradient-text:hover {
 }
 
 @media (max-width: 600px) {
+    .nav-container {
+        flex-direction: column;
+        gap: 15px;
+    }
+    
     .nav-links {
-        display: none;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 10px;
+    }
+
+    .nav-links a {
+        font-size: 0.85rem;
+        padding: 8px 16px;
     }
 
     .landing-title {
