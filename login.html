@@ -112,9 +112,11 @@
                 }
 
                 if (!data || data.length === 0) {
-                    // İstifadəçi place_admins cədvəlində yoxdur — super admin kimi qəbul et (geriyə uyğunluq)
-                    return 'admin.html';
+                    // İstifadəçi place_admins cədvəlində yoxdur — Təhlükəsizlik üçün giriş bloklanır.
+                    await window.supabaseClient.auth.signOut();
+                    return 'NO_ROLE';
                 }
+
 
                 // Check if user is super_admin
                 const superAdminEntry = data.find(row => row.role === 'super_admin');
@@ -161,6 +163,10 @@
                 if (redirectUrl === 'BLOCKED') {
                     throw new Error('Hesabınız passiv edilib. Xahiş edirik admin ilə əlaqə saxlayın.');
                 }
+                if (redirectUrl === 'NO_ROLE') {
+                    throw new Error('Sistemdə rolunuz təyin edilməyib. Giriş icazəniz yoxdur.');
+                }
+
                 window.location.href = redirectUrl;
             } catch (err) {
                 errorElement.textContent = "Giriş xətası: " + err.message;
