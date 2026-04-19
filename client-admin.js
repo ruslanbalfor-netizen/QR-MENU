@@ -8,7 +8,9 @@ let supabaseClientLocal;
 let myPlaceId = null;
 let myPlaceSlug = null;
 let myPlaceName = null;
+let hasVideoAccess = false;
 let allCategories = [];
+
 
 document.addEventListener('DOMContentLoaded', async () => {
     supabaseClientLocal = window.supabaseClient;
@@ -91,6 +93,8 @@ async function loadMyPlace() {
 
         myPlaceSlug = data.slug;
         myPlaceName = data.name;
+        hasVideoAccess = !!data.has_video_access;
+
 
         // Update sidebar info
         const placeInfoBox = document.getElementById('place-info-box');
@@ -129,18 +133,57 @@ function populatePlaceForm(data) {
     document.getElementById('place-v-logo').value = data.logo || '';
     document.getElementById('place-v-cover').value = data.cover || '';
 
-    // Show existing images
+    // Configure Video Access UI
+    const coverFileInput = document.getElementById('place-v-cover-file');
+    const videoBadge = document.getElementById('video-premium-badge');
+    const coverLabel = document.getElementById('cover-label');
+    const coverHint = document.getElementById('cover-hint');
+
+    if (hasVideoAccess) {
+        coverFileInput.accept = "image/*,video/mp4";
+        if (videoBadge) videoBadge.style.display = 'block';
+        if (coverLabel) coverLabel.innerText = "Ön Qapaq Şəkli və ya Video (Cover)";
+        if (coverHint) coverHint.innerText = "Tövsiyə: 1200x600 px (Şəkil) və ya MP4 (Video). Maks: 10 MB.";
+    } else {
+        coverFileInput.accept = "image/*";
+        if (videoBadge) videoBadge.style.display = 'none';
+        if (coverLabel) coverLabel.innerText = "Ön Qapaq Şəkli (Cover)";
+        if (coverHint) coverHint.innerText = "Tövsiyə: 1200x600 px, Maks: 300 KB (WebP/JPG)";
+    }
+
+    // Show existing images/videos
     const logoPreview = document.getElementById('place-logo-preview');
     if (data.logo) {
         logoPreview.src = data.logo;
         logoPreview.style.display = 'block';
     }
+    
     const coverPreview = document.getElementById('place-cover-preview');
+    const coverVideoPreview = document.getElementById('place-cover-video-preview');
+
     if (data.cover) {
-        coverPreview.src = data.cover;
-        coverPreview.style.display = 'block';
+        const isVideo = data.cover.toLowerCase().endsWith('.mp4');
+        if (isVideo && coverVideoPreview) {
+            coverVideoPreview.src = data.cover;
+            coverVideoPreview.style.display = 'block';
+            coverPreview.style.display = 'none';
+        } else {
+            coverPreview.src = data.cover;
+            coverPreview.style.display = 'block';
+            if (coverVideoPreview) {
+                coverVideoPreview.src = '';
+                coverVideoPreview.style.display = 'none';
+            }
+        }
+    } else {
+        coverPreview.style.display = 'none';
+        if (coverVideoPreview) {
+            coverVideoPreview.src = '';
+            coverVideoPreview.style.display = 'none';
+        }
     }
 }
+
 
 
 // ==== Place Settings Form Submit ====
@@ -248,21 +291,48 @@ function switchTab(prefix, lang, e) {
 }
 window.switchTab = switchTab;
 
-// ==== Image Preview ====
+// ==== Image/Video Preview ====
 window.previewImage = function (input, imgId) {
     const preview = document.getElementById(imgId);
-    if (input.files && input.files[0]) {
+    const videoPreview = document.getElementById(imgId.replace('preview', 'video-preview'));
+    const file = input.files ? input.files[0] : null;
+
+    if (file) {
+        const isVideo = file.type.startsWith('video/');
+        
+        // Final check for video access security
+        if (isVideo && !hasVideoAccess) {
+            showToast("Video yükləmək üçün paketiniz uyğun deyil!", "error");
+            input.value = '';
+            return;
+        }
+
         const reader = new FileReader();
-        reader.onload = (e) => {
-            preview.src = e.target.result;
-            preview.style.display = 'block';
-        };
-        reader.readAsDataURL(input.files[0]);
+        reader.onload = function (e) {
+            if (isVideo && videoPreview) {
+                videoPreview.src = e.target.result;
+                videoPreview.style.display = 'block';
+                preview.style.display = 'none';
+            } else {
+                preview.src = e.target.result;
+                preview.style.display = 'block';
+                if (videoPreview) {
+                    videoPreview.src = '';
+                    videoPreview.style.display = 'none';
+                }
+            }
+        }
+        reader.readAsDataURL(file);
     } else {
         preview.src = '';
         preview.style.display = 'none';
+        if (videoPreview) {
+            videoPreview.src = '';
+            videoPreview.style.display = 'none';
+        }
     }
-};
+}
+
 
 
 // ===================== IMAGE UPLOAD HELPERS =====================
@@ -308,15 +378,40 @@ async function compressImage(file, folder) {
 
 async function uploadImage(file, folder) {
     if (!file) return null;
-    const fileName = `${folder}/${Date.now()}_${Math.floor(Math.random() * 1000)}.jpg`;
-    const compressedFile = await compressImage(file, folder);
+    const isVideo = file.type.startsWith('video/');
+    
+    if (isVideo && !hasVideoAccess) {
+        throw new Error("Video yükləmək icazəniz yoxdur.");
+    }
+
+    const fileExt = isVideo ? file.name.split('.').pop() : 'jpg'; 
+    const fileName = `${folder}/${Date.now()}_${Math.floor(Math.random() * 1000)}.${fileExt}`;
+
+    let fileToUpload = file;
+    if (!isVideo) {
+        // Compress the image before uploading
+        fileToUpload = await compressImage(file, folder);
+    }
+
     const { data, error } = await supabaseClientLocal.storage
         .from('qr-menu-images')
-        .upload(fileName, compressedFile, { cacheControl: '3600', upsert: false });
-    if (error) throw new Error("Şəkil yüklənərkən xəta: " + error.message);
-    const { data: publicUrlData } = supabaseClientLocal.storage.from('qr-menu-images').getPublicUrl(fileName);
+        .upload(fileName, fileToUpload, {
+            cacheControl: '3600',
+            upsert: false
+        });
+
+    if (error) {
+        console.error("Upload error:", error);
+        throw new Error((isVideo ? "Video" : "Şəkil") + " yüklənərkən xəta: " + error.message);
+    }
+
+    const { data: publicUrlData } = supabaseClientLocal.storage
+        .from('qr-menu-images')
+        .getPublicUrl(fileName);
+
     return publicUrlData.publicUrl;
 }
+
 
 async function deleteFileFromStorage(url) {
     if (!url || !url.includes('qr-menu-images')) return;

@@ -583,7 +583,19 @@ body.dark-mode .theme-option.active {
     background-size: cover;
     background-position: center;
     position: relative;
+    overflow: hidden;
 }
+
+.header-cover-video {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: 0;
+}
+
 
 .header-container {
     text-align: center;

@@ -138,18 +138,37 @@ window.switchTab = switchTab;
 // ==== Image Preview Logic ====
 window.previewImage = function (input, imgId) {
     const preview = document.getElementById(imgId);
-    if (input.files && input.files[0]) {
+    const videoPreview = document.getElementById(imgId.replace('preview', 'video-preview'));
+    const file = input.files ? input.files[0] : null;
+
+    if (file) {
+        const isVideo = file.type.startsWith('video/');
         const reader = new FileReader();
         reader.onload = function (e) {
-            preview.src = e.target.result;
-            preview.style.display = 'block';
+            if (isVideo && videoPreview) {
+                videoPreview.src = e.target.result;
+                videoPreview.style.display = 'block';
+                preview.style.display = 'none';
+            } else {
+                preview.src = e.target.result;
+                preview.style.display = 'block';
+                if (videoPreview) {
+                    videoPreview.src = '';
+                    videoPreview.style.display = 'none';
+                }
+            }
         }
-        reader.readAsDataURL(input.files[0]);
+        reader.readAsDataURL(file);
     } else {
         preview.src = '';
         preview.style.display = 'none';
+        if (videoPreview) {
+            videoPreview.src = '';
+            videoPreview.style.display = 'none';
+        }
     }
 }
+
 
 // ================= PLACES =================
 async function loadPlaces() {
@@ -365,22 +384,26 @@ async function compressImage(file, folder) {
 // Helper function to upload an image to Supabase Storage
 async function uploadImage(file, folder) {
     if (!file) return null;
-    const fileExt = 'jpg'; // We compress everything to JPEG
+    const isVideo = file.type.startsWith('video/');
+    const fileExt = isVideo ? file.name.split('.').pop() : 'jpg'; 
     const fileName = `${folder}/${Date.now()}_${Math.floor(Math.random() * 1000)}.${fileExt}`;
 
-    // Compress the image before uploading
-    const compressedFile = await compressImage(file, folder);
+    let fileToUpload = file;
+    if (!isVideo) {
+        // Compress the image before uploading
+        fileToUpload = await compressImage(file, folder);
+    }
 
     const { data, error } = await supabaseClientLocal.storage
         .from('qr-menu-images')
-        .upload(fileName, compressedFile, {
+        .upload(fileName, fileToUpload, {
             cacheControl: '3600',
             upsert: false
         });
 
     if (error) {
         console.error("Upload error:", error);
-        throw new Error("Şəkil yüklənərkən xəta baş verdi: " + error.message);
+        throw new Error((isVideo ? "Video" : "Şəkil") + " yüklənərkən xəta baş verdi: " + error.message);
     }
 
     const { data: publicUrlData } = supabaseClientLocal.storage
@@ -389,6 +412,7 @@ async function uploadImage(file, folder) {
 
     return publicUrlData.publicUrl;
 }
+
 
 // Helper function to delete a file from Supabase Storage
 async function deleteFileFromStorage(url) {
@@ -428,8 +452,10 @@ document.getElementById('place-form').addEventListener('submit', async (e) => {
         const facebook = document.getElementById('place-v-facebook').value || null;
         const google_url = document.getElementById('place-v-google').value || null;
         const theme_variant = document.getElementById('place-v-theme').value || 'default';
+        const has_video_access = document.getElementById('place-v-has-video-access').checked;
 
         const logoFile = document.getElementById('place-v-logo-file').files[0];
+
         const coverFile = document.getElementById('place-v-cover-file').files[0];
 
         if (logoFile) {
@@ -445,7 +471,8 @@ document.getElementById('place-form').addEventListener('submit', async (e) => {
             cover = await uploadImage(coverFile, 'covers');
         }
 
-        const payload = { name, slug, currency, service_charge, logo, cover, phone, whatsapp, instagram, facebook, google_url, theme_variant };
+        const payload = { name, slug, currency, service_charge, logo, cover, phone, whatsapp, instagram, facebook, google_url, theme_variant, has_video_access };
+
 
         let error;
         if (id) {
@@ -480,6 +507,15 @@ window.openPlaceModal = async function (id = null) {
     document.getElementById('place-modal-title').innerText = "Yeni Məkan";
     document.getElementById('place-logo-preview').style.display = 'none';
     document.getElementById('place-cover-preview').style.display = 'none';
+    const videoAccessBox = document.getElementById('place-v-has-video-access');
+    if (videoAccessBox) videoAccessBox.checked = false;
+
+    const coverVideo = document.getElementById('place-cover-video-preview');
+    if (coverVideo) {
+        coverVideo.src = '';
+        coverVideo.style.display = 'none';
+    }
+
 
     if (id) {
         document.getElementById('place-modal-title').innerText = "Məkanı Redaktə Et";
@@ -488,6 +524,9 @@ window.openPlaceModal = async function (id = null) {
             document.getElementById('place-v-id').value = data.id;
             document.getElementById('place-v-name').value = data.name;
             document.getElementById('place-v-slug').value = data.slug;
+            const videoAccessBox = document.getElementById('place-v-has-video-access');
+            if (videoAccessBox) videoAccessBox.checked = !!data.has_video_access;
+
             document.getElementById('place-v-currency').value = data.currency;
             document.getElementById('place-v-service-charge').value = data.service_charge || 0;
 
@@ -512,12 +551,24 @@ window.openPlaceModal = async function (id = null) {
             document.getElementById('place-v-cover').value = data.cover || '';
             document.getElementById('place-v-cover-file').value = '';
             const coverPreview = document.getElementById('place-cover-preview');
+            const coverVideoPreview = document.getElementById('place-cover-video-preview');
+            
             if (data.cover) {
-                coverPreview.src = data.cover;
-                coverPreview.style.display = 'block';
+                const isVideo = data.cover.toLowerCase().endsWith('.mp4');
+                if (isVideo && coverVideoPreview) {
+                    coverVideoPreview.src = data.cover;
+                    coverVideoPreview.style.display = 'block';
+                    coverPreview.style.display = 'none';
+                } else {
+                    coverPreview.src = data.cover;
+                    coverPreview.style.display = 'block';
+                    if (coverVideoPreview) coverVideoPreview.style.display = 'none';
+                }
             } else {
                 coverPreview.style.display = 'none';
+                if (coverVideoPreview) coverVideoPreview.style.display = 'none';
             }
+
         }
     }
     openModal('place-modal');

@@ -273,7 +273,29 @@ document.addEventListener('DOMContentLoaded', () => {
             const logoEl = document.getElementById('brand-logo');
             const coverEl = document.getElementById('header-cover');
             if (logoEl) logoEl.src = placeData.logo || "https://placehold.co/150x150/ffffff/cccccc?text=Logo";
-            if (coverEl) coverEl.style.backgroundImage = `url('${placeData.cover || 'https://placehold.co/800x300/333/666?text=Cover'}')`;
+            if (coverEl) {
+                const coverUrl = placeData.cover || 'https://placehold.co/800x300/333/666?text=Cover';
+                const isVideo = coverUrl.toLowerCase().endsWith('.mp4');
+                
+                // Cleanup old video if exists
+                const oldVideo = coverEl.querySelector('.header-cover-video');
+                if (oldVideo) oldVideo.remove();
+
+                if (isVideo) {
+                    coverEl.style.backgroundImage = 'none';
+                    const video = document.createElement('video');
+                    video.autoplay = true;
+                    video.muted = true;
+                    video.loop = true;
+                    video.setAttribute('playsinline', '');
+                    video.className = 'header-cover-video';
+                    video.innerHTML = `<source src="${coverUrl}" type="video/mp4">`;
+                    coverEl.prepend(video);
+                } else {
+                    coverEl.style.backgroundImage = `url('${coverUrl}')`;
+                }
+            }
+
             
             // Apply the brand theme from database
             if (placeData.theme_variant) {

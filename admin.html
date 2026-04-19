@@ -373,19 +373,29 @@
                     </select>
                     <div id="theme-custom-dropdown"></div>
                 </div>
+                <div class="form-group" style="display: flex; align-items: center; gap: 10px; background: #e0f2fe; padding: 12px; border-radius: 10px; margin-bottom: 15px; border: 1px solid #bae6fd;">
+                    <input type="checkbox" id="place-v-has-video-access" style="width: 20px; height: 20px; cursor: pointer;">
+                    <label for="place-v-has-video-access" style="margin-bottom: 0; cursor: pointer; font-weight: 600; color: #0369a1; display: flex; align-items: center; gap: 8px;">
+                        <i class="fa-solid fa-video"></i> Video Cover İcazəsi (Premium)
+                    </label>
+                </div>
+
                 <div class="form-group">
                     <label>Loqo Şəkli</label>
+
                     <input type="hidden" id="place-v-logo">
                     <input type="file" id="place-v-logo-file" class="form-control" accept="image/*" onchange="previewImage(this, 'place-logo-preview')">
                     <small class="text-muted" style="display:block; margin-top:5px;">Tövsiyə: 400x400 px, Maks: 50 KB (WebP/JPG)</small>
                     <img id="place-logo-preview" src="" style="width:80px; height:80px; object-fit:cover; margin-top:10px; display:none; border-radius:50%; border:2px solid #eee;">
                 </div>
                 <div class="form-group">
-                    <label>Ön Qapaq Şəkli (Cover)</label>
+                    <label>Ön Qapaq Şəkli və ya Video (Cover)</label>
                     <input type="hidden" id="place-v-cover">
-                    <input type="file" id="place-v-cover-file" class="form-control" accept="image/*" onchange="previewImage(this, 'place-cover-preview')">
-                    <small class="text-muted" style="display:block; margin-top:5px;">Tövsiyə: 1200x600 px, Maks: 300 KB (WebP/JPG)</small>
+                    <input type="file" id="place-v-cover-file" class="form-control" accept="image/*,video/mp4" onchange="previewImage(this, 'place-cover-preview')">
+                    <small class="text-muted" style="display:block; margin-top:5px;">Tövsiyə: 1200x600 px (Şəkil) və ya MP4 (Video). Maks: 10 MB.</small>
                     <img id="place-cover-preview" src="" style="height:120px; width:100%; object-fit:cover; margin-top:10px; display:none; border-radius:8px;">
+                    <video id="place-cover-video-preview" controls style="height:120px; width:100%; object-fit:cover; margin-top:10px; display:none; border-radius:8px;"></video>
+
                 </div>
 
                 <div style="margin-top:25px; display:flex; justify-content:flex-end; gap:10px;">

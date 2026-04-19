@@ -264,12 +264,19 @@
                         <img id="place-logo-preview" src="" style="width:80px; height:80px; object-fit:cover; margin-top:10px; display:none; border-radius:50%; border:2px solid #eee;">
                     </div>
                     <div class="form-group">
-                        <label>Ön Qapaq Şəkli (Cover)</label>
+                        <label id="cover-label">Ön Qapaq Şəkli (Cover)</label>
+                        <div id="video-premium-badge" style="display:none; margin-bottom: 5px;">
+                            <span style="background: #fef3c7; color: #92400e; padding: 4px 8px; border-radius: 6px; font-size: 0.75rem; font-weight: 700; border: 1px solid #fcd34d;">
+                                <i class="fa-solid fa-crown"></i> Premium: Video Dəstəyi Aktivdir
+                            </span>
+                        </div>
                         <input type="hidden" id="place-v-cover">
                         <input type="file" id="place-v-cover-file" class="form-control" accept="image/*" onchange="previewImage(this, 'place-cover-preview')">
-                        <small class="text-muted" style="display:block; margin-top:5px;">Tövsiyə: 1200x600 px, Maks: 300 KB (WebP/JPG)</small>
+                        <small id="cover-hint" class="text-muted" style="display:block; margin-top:5px;">Tövsiyə: 1200x600 px, Maks: 300 KB (WebP/JPG)</small>
                         <img id="place-cover-preview" src="" style="height:120px; width:100%; object-fit:cover; margin-top:10px; display:none; border-radius:8px;">
+                        <video id="place-cover-video-preview" controls style="height:120px; width:100%; object-fit:cover; margin-top:10px; display:none; border-radius:8px;"></video>
                     </div>
+
 
                     <div style="margin-top:25px; display:flex; justify-content:flex-end;">
                         <button type="submit" class="btn btn-primary" id="place-save-btn" style="padding:12px 30px; font-size:1rem;">
