@@ -14,6 +14,19 @@
             const { data: { session } } = await window.supabaseClient.auth.getSession();
             if (!session) {
                 window.location.href = 'login.html';
+                return;
+            }
+            
+            // Xüsusi Təhlükəsizlik: URL üzərindən icazəsiz girişin qarşısını alırıq
+            const { data, error } = await window.supabaseClient
+                .from('place_admins')
+                .select('role')
+                .eq('user_id', session.user.id)
+                .eq('role', 'super_admin');
+
+            if (error || !data || data.length === 0) {
+                // Əgər istifadəçi "super_admin" deyilsə, öz panelinə və ya logine at.
+                window.location.href = 'client-admin.html';
             }
         }
         checkAuth();
