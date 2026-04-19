@@ -12,18 +12,31 @@ let hasVideoAccess = false;
 let allCategories = [];
 let presenceInterval = null;
 let currentUserId = null;
+let lastActivityTime = Date.now();
+
+// İstifadəçinin hərəkətlərini izləyirik ki, "AFK" (kompüterdən uzaq) olanda boş yerə bazaya yük düşməsin
+['mousemove', 'keydown', 'click', 'touchstart'].forEach(evt => {
+    document.addEventListener(evt, () => lastActivityTime = Date.now(), { passive: true });
+});
 
 // Func to update presence
 async function updatePresence() {
     if (!currentUserId) return;
-    try {
-        await supabaseClientLocal.from('place_admins')
-            .update({ last_seen: new Date().toISOString() })
-            .eq('user_id', currentUserId);
-    } catch (e) {
-        console.warn("Presence update failed", e);
+    
+    // Yalnız son 2 dəqiqə ərzində aktivlik olubsa siqnal göndər
+    const isRecentlyActive = (Date.now() - lastActivityTime) < 120000;
+    
+    if (isRecentlyActive) {
+        try {
+            await supabaseClientLocal.from('place_admins')
+                .update({ last_seen: new Date().toISOString() })
+                .eq('user_id', currentUserId);
+        } catch (e) {
+            console.warn("Presence update failed", e);
+        }
     }
 }
+
 
 
 document.addEventListener('DOMContentLoaded', async () => {
