@@ -1209,6 +1209,14 @@ function renderUsersList() {
             ? '<span style="background:#28a745;color:white;padding:2px 8px;border-radius:12px;font-size:0.75rem;margin-left:6px;">Aktiv</span>'
             : '<span style="background:#6c757d;color:white;padding:2px 8px;border-radius:12px;font-size:0.75rem;margin-left:6px;">Passiv</span>';
 
+        let presenceBadge = '<span style="color:#6c757d; font-size:0.8rem; margin-left:10px;"><i class="fa-solid fa-circle" style="font-size:0.5rem; vertical-align:middle; margin-right:3px;"></i> Oflayn</span>';
+        if (record.last_seen) {
+            const timeDiff = new Date() - new Date(record.last_seen);
+            if (timeDiff < 120000) { // 2 minutes in ms
+                presenceBadge = '<span style="color:#28a745; font-size:0.8rem; margin-left:10px; font-weight:600;"><i class="fa-solid fa-circle" style="font-size:0.5rem; vertical-align:middle; margin-right:3px;"></i> Onlayn</span>';
+            }
+        }
+
         const toggleChecked = isActive ? 'checked' : '';
 
         const item = document.createElement('div');
@@ -1216,10 +1224,13 @@ function renderUsersList() {
         item.style.cssText = opacityStyle;
         item.innerHTML = `
             <div class="data-info" style="flex:1;">
-                <h4>${roleIcon} ${escapeAdminHTML(record.user_id.substring(0, 8))}... ${roleLabel} ${statusBadge}</h4>
+                <h4>${roleIcon} ${escapeAdminHTML(record.user_id.substring(0, 8))}... ${roleLabel} ${statusBadge} ${presenceBadge}</h4>
                 <p><i class="fa-solid fa-store" style="margin-right:5px;"></i> Məkan: ${placeName}</p>
-                <p style="font-size:0.8rem; color:#adb5bd;">Yaradılıb: ${new Date(record.created_at).toLocaleDateString('az-AZ')}</p>
+                <p style="font-size:0.8rem; color:#adb5bd;">Yaradılıb: ${new Date(record.created_at).toLocaleDateString('az-AZ')} 
+                   ${record.last_seen ? `(Son aktivlik: ${new Date(record.last_seen).toLocaleTimeString('az-AZ', { hour: '2-digit', minute: '2-digit' })})` : ''}
+                </p>
             </div>
+
             <div class="data-actions" style="align-items:center;">
                 <label class="toggle-switch" title="${isActive ? 'Passiv et' : 'Aktiv et'}">
                     <input type="checkbox" ${toggleChecked} onchange="toggleUserActive('${record.id}', this.checked)">

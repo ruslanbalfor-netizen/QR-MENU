@@ -10,6 +10,20 @@ let myPlaceSlug = null;
 let myPlaceName = null;
 let hasVideoAccess = false;
 let allCategories = [];
+let presenceInterval = null;
+let currentUserId = null;
+
+// Func to update presence
+async function updatePresence() {
+    if (!currentUserId) return;
+    try {
+        await supabaseClientLocal.from('place_admins')
+            .update({ last_seen: new Date().toISOString() })
+            .eq('user_id', currentUserId);
+    } catch (e) {
+        console.warn("Presence update failed", e);
+    }
+}
 
 
 document.addEventListener('DOMContentLoaded', async () => {
@@ -41,6 +55,8 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     // Find place_admin entry (not super_admin)
     const placeAdminEntry = adminData ? adminData.find(a => a.role === 'place_admin' && a.place_id) : null;
+    currentUserId = userId;
+
 
     if (!placeAdminEntry) {
         showToast("Sizə heç bir məkan təyin edilməyib. Xahiş edirik admin ilə əlaqə saxlayın.", "error");
@@ -76,7 +92,12 @@ document.addEventListener('DOMContentLoaded', async () => {
             }
         });
     });
+
+    // Start presence tracking (Heartbeat every 60 seconds)
+    updatePresence();
+    presenceInterval = setInterval(updatePresence, 60000);
 });
+
 
 
 // ==== Load Place Data ====
@@ -853,8 +874,19 @@ window.downloadQR = async function () {
 
 window.logout = async function () {
     if (confirm("Sistemdən çıxış etmək istəyirsiniz?")) {
+        if (presenceInterval) clearInterval(presenceInterval);
+        
+        // Log them out officially immediately by setting last_seen back 1 hour
+        if (currentUserId) {
+            const pastDate = new Date(Date.now() - 3600000).toISOString();
+            await supabaseClientLocal.from('place_admins')
+                .update({ last_seen: pastDate })
+                .eq('user_id', currentUserId);
+        }
+
         const { error } = await supabaseClientLocal.auth.signOut();
         if (error) alert("Çıxış xətası: " + error.message);
         window.location.href = 'login.html';
     }
 };
+
