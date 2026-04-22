@@ -181,6 +181,10 @@
             const { data: { session } } = await window.supabaseClient.auth.getSession();
             if (session) {
                 const redirectUrl = await getRedirectUrl(session.user.id);
+                if (redirectUrl === 'BLOCKED' || redirectUrl === 'NO_ROLE') {
+                    // İstifadəçi bloklanıb və ya rolu yoxdur — login səhifəsində qalsın
+                    return;
+                }
                 window.location.href = redirectUrl;
             }
         }

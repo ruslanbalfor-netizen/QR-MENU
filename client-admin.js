@@ -656,9 +656,9 @@ window.renderItems = async function () {
             return;
         }
 
-        let query = supabaseClientLocal.from('items').select('*').in('category_id', catIds);
+        let query = supabaseClientLocal.from('items').select('*').in('category_id', catIds).order('sort_order', { ascending: true, nullsFirst: false });
         if (filterCatId !== 'all') {
-            query = supabaseClientLocal.from('items').select('*').eq('category_id', filterCatId);
+            query = supabaseClientLocal.from('items').select('*').eq('category_id', filterCatId).order('sort_order', { ascending: true, nullsFirst: false });
         }
 
         const { data, error } = await query;

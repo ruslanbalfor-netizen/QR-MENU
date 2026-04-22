@@ -289,10 +289,13 @@ document.addEventListener('DOMContentLoaded', () => {
                     video.loop = true;
                     video.setAttribute('playsinline', '');
                     video.className = 'header-cover-video';
-                    video.innerHTML = `<source src="${coverUrl}" type="video/mp4">`;
+                    const source = document.createElement('source');
+                    source.src = coverUrl;
+                    source.type = 'video/mp4';
+                    video.appendChild(source);
                     coverEl.prepend(video);
                 } else {
-                    coverEl.style.backgroundImage = `url('${coverUrl}')`;
+                    coverEl.style.backgroundImage = `url('${CSS.escape(coverUrl)}')`;
                 }
             }
 
@@ -309,37 +312,49 @@ document.addEventListener('DOMContentLoaded', () => {
             appData.branding.currency = placeData.currency || 'AZN';
             appData.branding.service_charge = placeData.service_charge || 0;
 
+            // --- URL Təhlükəsizlik Yoxlaması ---
+            function isSafeUrl(url) {
+                if (!url) return false;
+                const trimmed = url.trim().toLowerCase();
+                return trimmed.startsWith('http://') || trimmed.startsWith('https://') || trimmed.startsWith('tel:');
+            }
+
             // Socials
             let socialHtml = '';
 
             // Phone
             if (placeData.phone) {
-                socialHtml += `<a href="tel:${placeData.phone}" class="social-circle-btn"><img src="assets/icons/phone.png" alt="Phone" class="social-icon-img" style="background: white; object-fit: contain;"></a>`;
+                const phoneClean = placeData.phone.replace(/[^0-9+\-() ]/g, '');
+                socialHtml += `<a href="tel:${escapeHTML(phoneClean)}" class="social-circle-btn"><img src="assets/icons/phone.png" alt="Phone" class="social-icon-img" style="background: white; object-fit: contain;"></a>`;
             }
 
             // WhatsApp
             if (placeData.whatsapp) {
                 let waClean = placeData.whatsapp.replace(/[^0-9]/g, '');
-                socialHtml += `<a href="https://wa.me/${waClean}" class="social-circle-btn" target="_blank"><img src="assets/icons/whatsapp.png" alt="WhatsApp" class="social-icon-img"></a>`;
+                socialHtml += `<a href="https://wa.me/${escapeHTML(waClean)}" class="social-circle-btn" target="_blank"><img src="assets/icons/whatsapp.png" alt="WhatsApp" class="social-icon-img"></a>`;
             }
 
             // Instagram
             if (placeData.instagram) {
                 let instaVal = placeData.instagram.replace('@', '').trim();
-                let instaHref = instaVal.startsWith('http') ? instaVal : `https://instagram.com/${instaVal}`;
-                socialHtml += `<a href="${instaHref}" class="social-circle-btn" target="_blank"><img src="assets/icons/instagram.png" alt="Instagram" class="social-icon-img"></a>`;
+                let instaHref = instaVal.startsWith('http') ? instaVal : `https://instagram.com/${encodeURIComponent(instaVal)}`;
+                if (isSafeUrl(instaHref)) {
+                    socialHtml += `<a href="${escapeHTML(instaHref)}" class="social-circle-btn" target="_blank"><img src="assets/icons/instagram.png" alt="Instagram" class="social-icon-img"></a>`;
+                }
             }
 
             // Facebook
             if (placeData.facebook) {
                 let fbVal = placeData.facebook.trim();
-                let fbHref = fbVal.startsWith('http') ? fbVal : `https://facebook.com/${fbVal}`;
-                socialHtml += `<a href="${fbHref}" class="social-circle-btn" target="_blank"><img src="assets/icons/facebook.png" alt="Facebook" class="social-icon-img"></a>`;
+                let fbHref = fbVal.startsWith('http') ? fbVal : `https://facebook.com/${encodeURIComponent(fbVal)}`;
+                if (isSafeUrl(fbHref)) {
+                    socialHtml += `<a href="${escapeHTML(fbHref)}" class="social-circle-btn" target="_blank"><img src="assets/icons/facebook.png" alt="Facebook" class="social-icon-img"></a>`;
+                }
             }
 
             // Google Maps / Review
-            if (placeData.google_url) {
-                socialHtml += `<a href="${placeData.google_url}" class="social-circle-btn" target="_blank"><img src="assets/icons/google.avif" alt="Google" class="social-icon-img" style="background: white; object-fit: contain;"></a>`;
+            if (placeData.google_url && isSafeUrl(placeData.google_url)) {
+                socialHtml += `<a href="${escapeHTML(placeData.google_url)}" class="social-circle-btn" target="_blank"><img src="assets/icons/google.avif" alt="Google" class="social-icon-img" style="background: white; object-fit: contain;"></a>`;
             }
 
             if (socialHtml) {
@@ -1002,7 +1017,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const itemEl = document.createElement('div');
             itemEl.className = 'cart-item';
 
-            const itemName = item.name[currentLang] || item.name.az;
+            const itemName = escapeHTML(item.name[currentLang] || item.name.az);
             const itemTotal = Number(item.price) * item.qty;
             subtotal += itemTotal;
 

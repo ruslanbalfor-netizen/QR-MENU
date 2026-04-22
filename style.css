@@ -13,7 +13,6 @@ body {
     color: var(--text-primary);
     max-width: 480px;
     margin: 0 auto;
-    background-color: var(--bg-light);
 }
 
 /* Custom Scrollbar for a premium look */
@@ -1446,14 +1445,15 @@ body.dark-mode .theme-option.active {
     transform: scale(0.9);
 }
 
+/* Image Zoom logic removed as requested - Modal is now immersive by default */
 .modal-item-img {
-    width: 100% !important;
-    height: auto !important;
-    /* Natural scaling - NO ZOOM/CROP */
+    width: 100%;
+    height: auto;
     display: block;
     margin: 0;
     padding: 0;
     border-bottom: 1px solid var(--border-color);
+    cursor: default;
 }
 
 @media (max-width: 480px) {
