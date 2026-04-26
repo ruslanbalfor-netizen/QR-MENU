@@ -284,16 +284,19 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (isVideo) {
                     coverEl.style.backgroundImage = 'none';
                     const video = document.createElement('video');
-                    video.autoplay = true;
-                    video.muted = true;
-                    video.loop = true;
+                    video.setAttribute('autoplay', '');
+                    video.setAttribute('muted', '');
+                    video.setAttribute('loop', '');
                     video.setAttribute('playsinline', '');
+                    video.muted = true; // Required: JS property must also be set for some browsers
                     video.className = 'header-cover-video';
                     const source = document.createElement('source');
                     source.src = coverUrl;
                     source.type = 'video/mp4';
                     video.appendChild(source);
                     coverEl.prepend(video);
+                    // Explicitly call play() for mobile browser autoplay reliability
+                    video.play().catch(() => { /* autoplay blocked by browser policy */ });
                 } else {
                     coverEl.style.backgroundImage = `url('${CSS.escape(coverUrl)}')`;
                 }
