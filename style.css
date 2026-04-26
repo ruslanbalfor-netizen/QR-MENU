@@ -582,7 +582,7 @@ body.dark-mode .theme-option.active {
     background-size: cover;
     background-position: center;
     position: relative;
-    overflow: visible;
+    overflow: hidden;
 }
 
 .header-cover-video {
@@ -593,7 +593,7 @@ body.dark-mode .theme-option.active {
     height: 100%;
     object-fit: cover;
     z-index: 0;
-    clip-path: inset(0 0 0 0);
+
 }
 
 

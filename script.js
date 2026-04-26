@@ -288,15 +288,32 @@ document.addEventListener('DOMContentLoaded', () => {
                     video.setAttribute('muted', '');
                     video.setAttribute('loop', '');
                     video.setAttribute('playsinline', '');
-                    video.muted = true; // Required: JS property must also be set for some browsers
+                    video.setAttribute('preload', 'auto');
+                    video.muted = true;
+                    video.playsInline = true;
                     video.className = 'header-cover-video';
-                    const source = document.createElement('source');
-                    source.src = coverUrl;
-                    source.type = 'video/mp4';
-                    video.appendChild(source);
+                    video.src = coverUrl;
                     coverEl.prepend(video);
-                    // Explicitly call play() for mobile browser autoplay reliability
-                    video.play().catch(() => { /* autoplay blocked by browser policy */ });
+
+                    // Wait for video data to load, then force play
+                    video.addEventListener('loadeddata', () => {
+                        video.muted = true;
+                        video.play().catch(() => {});
+                    });
+
+                    // Also try playing immediately
+                    video.load();
+                    video.play().catch(() => {});
+
+                    // Last resort: play on first user interaction
+                    const forcePlay = () => {
+                        video.muted = true;
+                        video.play().catch(() => {});
+                        document.removeEventListener('touchstart', forcePlay);
+                        document.removeEventListener('click', forcePlay);
+                    };
+                    document.addEventListener('touchstart', forcePlay, { once: true });
+                    document.addEventListener('click', forcePlay, { once: true });
                 } else {
                     coverEl.style.backgroundImage = `url('${CSS.escape(coverUrl)}')`;
                 }
