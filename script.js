@@ -284,36 +284,15 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (isVideo) {
                     coverEl.style.backgroundImage = 'none';
                     const video = document.createElement('video');
-                    video.setAttribute('autoplay', '');
-                    video.setAttribute('muted', '');
-                    video.setAttribute('loop', '');
-                    video.setAttribute('playsinline', '');
-                    video.setAttribute('preload', 'auto');
+                    video.autoplay = true;
                     video.muted = true;
+                    video.loop = true;
                     video.playsInline = true;
+                    video.setAttribute('playsinline', '');
+                    video.setAttribute('muted', '');
                     video.className = 'header-cover-video';
                     video.src = coverUrl;
                     coverEl.prepend(video);
-
-                    // Wait for video data to load, then force play
-                    video.addEventListener('loadeddata', () => {
-                        video.muted = true;
-                        video.play().catch(() => {});
-                    });
-
-                    // Also try playing immediately
-                    video.load();
-                    video.play().catch(() => {});
-
-                    // Last resort: play on first user interaction
-                    const forcePlay = () => {
-                        video.muted = true;
-                        video.play().catch(() => {});
-                        document.removeEventListener('touchstart', forcePlay);
-                        document.removeEventListener('click', forcePlay);
-                    };
-                    document.addEventListener('touchstart', forcePlay, { once: true });
-                    document.addEventListener('click', forcePlay, { once: true });
                 } else {
                     coverEl.style.backgroundImage = `url('${CSS.escape(coverUrl)}')`;
                 }
@@ -472,7 +451,16 @@ document.addEventListener('DOMContentLoaded', () => {
         const loader = document.getElementById('page-loader');
         if (loader) {
             loader.classList.add('fade-out');
-            setTimeout(() => loader.style.display = 'none', 500);
+            setTimeout(() => {
+                loader.style.display = 'none';
+                // Play cover video after loader is gone — browsers block autoplay
+                // for videos hidden behind full-screen overlays
+                const coverVideo = document.querySelector('.header-cover-video');
+                if (coverVideo) {
+                    coverVideo.muted = true;
+                    coverVideo.play().catch(() => {});
+                }
+            }, 500);
         }
     }
 
