@@ -283,16 +283,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 if (isVideo) {
                     coverEl.style.backgroundImage = 'none';
-                    const video = document.createElement('video');
-                    video.autoplay = true;
-                    video.muted = true;
-                    video.loop = true;
-                    video.playsInline = true;
-                    video.setAttribute('playsinline', '');
-                    video.setAttribute('muted', '');
-                    video.className = 'header-cover-video';
-                    video.src = coverUrl;
-                    coverEl.prepend(video);
+                    // Save video URL — video will be created after loader hides
+                    // to prevent browsers from blocking autoplay behind overlay
+                    window._pendingCoverVideo = coverUrl;
                 } else {
                     coverEl.style.backgroundImage = `url('${CSS.escape(coverUrl)}')`;
                 }
@@ -453,12 +446,24 @@ document.addEventListener('DOMContentLoaded', () => {
             loader.classList.add('fade-out');
             setTimeout(() => {
                 loader.style.display = 'none';
-                // Play cover video after loader is gone — browsers block autoplay
-                // for videos hidden behind full-screen overlays
-                const coverVideo = document.querySelector('.header-cover-video');
-                if (coverVideo) {
-                    coverVideo.muted = true;
-                    coverVideo.play().catch(() => {});
+                // Create and play cover video AFTER loader is fully gone
+                // Browsers block autoplay for videos behind full-screen overlays
+                if (window._pendingCoverVideo) {
+                    const coverEl = document.getElementById('header-cover');
+                    if (coverEl) {
+                        const video = document.createElement('video');
+                        video.autoplay = true;
+                        video.muted = true;
+                        video.loop = true;
+                        video.playsInline = true;
+                        video.setAttribute('playsinline', '');
+                        video.setAttribute('muted', '');
+                        video.setAttribute('autoplay', '');
+                        video.className = 'header-cover-video';
+                        video.src = window._pendingCoverVideo;
+                        coverEl.prepend(video);
+                        window._pendingCoverVideo = null;
+                    }
                 }
             }, 500);
         }
