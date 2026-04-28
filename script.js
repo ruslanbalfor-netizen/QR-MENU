@@ -292,9 +292,13 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
             
-            // Apply the brand theme from database
+            // Apply the brand theme from database (only if user hasn't chosen their own)
             if (placeData.theme_variant) {
-                applyTheme(placeData.theme_variant);
+                const userSavedTheme = localStorage.getItem('qr_menu_theme');
+                // Only apply DB theme if user has no locally saved preference
+                if (!userSavedTheme) {
+                    applyTheme(placeData.theme_variant);
+                }
                 // Hide manual theme picker from customers (except for demo)
                 if (placeSlug !== 'ruismenu') {
                     const themeSwitch = document.getElementById('theme-switch');
